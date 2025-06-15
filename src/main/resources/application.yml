@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://zboynabc.mysql.database.azure.com:3306/smartcar
+    username: zboyn
+    password: faith213.5
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.neu.zboyn.car.model
+  configuration:
+    map-underscore-to-camel-case: true
