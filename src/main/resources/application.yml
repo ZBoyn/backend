@@ -14,4 +14,5 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.neu.zboyn.car.model
   configuration:
+    # 驼峰和下划线命名自动转换
     map-underscore-to-camel-case: true

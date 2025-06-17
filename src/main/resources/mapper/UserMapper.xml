@@ -5,5 +5,12 @@
 
 <mapper namespace="com.neu.zboyn.car.mapper.UserMapper">
 
+    <select id="Login" resultType="com.neu.zboyn.car.model.User">
+        SELECT * FROM user WHERE username = #{username};
+    </select>
+
+    <select id="findByid" resultType="com.neu.zboyn.car.model.User">
+        SELECT * FROM user WHERE user_id = #{userId};
+    </select>
 
 </mapper>

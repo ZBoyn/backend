@@ -5,20 +5,19 @@ import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.model.User;
 
-public interface UserManageService {
-
-
+public interface UserService {
 
     Response<PageResult<User>> getUserList(
             int page,
             int pageSize,
-            Long userId,
+            String userId,
             String username,
             String nickname,
             Long deptId,
             String phoneNumber,
-            String status,
-            String createTime
+            Integer status,
+            String startTime,
+            String endTime
     );
 
 

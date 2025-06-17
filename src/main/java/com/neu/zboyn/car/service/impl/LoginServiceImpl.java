@@ -1,5 +1,10 @@
 package com.neu.zboyn.car.service.impl;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.neu.zboyn.car.dto.LoginToken;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.UserMapper;
 import com.neu.zboyn.car.model.User;
@@ -18,7 +23,7 @@ public class LoginServiceImpl implements LoginService {
     private BCryptUtil bCryptUtil;
 
     @Override
-    public Response<User> login(String username, String password) {
+    public Response<LoginToken> login(String username, String password) {
         User user = userMapper.Login(username);
 
         if (user == null) {
@@ -32,21 +37,53 @@ public class LoginServiceImpl implements LoginService {
             return new Response<>(-1, null, "用户名或密码错误", "用户名或密码错误");
         }
 
-        if (user.getStatus() == 0) {
+        if (user.getStatus().equals("0")) {
             System.out.println("登录失败：账号已被禁用");
-            return new Response<>(-1, null, "您的账号已被禁用，请联系管理员", "error");
+            return new Response<>(-1, null, "您的账号已被禁用，请联系管理员", "您的账号已被禁用，请联系管理员");
         }
 
         String accessToken = JWTUtil.generateToken(user.getUserId(), user.getUsername(), user.getUsername());
 
         if (accessToken == null) {
             System.out.println("登录失败：生成Token时发生错误 - " + username);
-            return new Response<>(-1, null, "服务器内部错误，请稍后再试", "error");
+            return new Response<>(-1, null, "服务器内部错误，请稍后再试", "服务器内部错误，请稍后再试");
         }
 
-        // 设置token到用户对象中
-        user.setToken(accessToken);
-        
-        return new Response<>(0, user, "登录成功", "success");
+        LoginToken loginToken = new LoginToken(accessToken);
+
+        return new Response<>(0, loginToken, "登录成功", "success");
     }
-} 
+
+    @Override
+    public Response<User> getUserInfoFromToken(String token) {
+        try {
+            // 移除Bearer前缀
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+                System.out.println("已经取出token");
+            }
+
+            // 验证并解析token
+            Algorithm algorithm = Algorithm.HMAC256(JWTUtil.SECRET_KEY);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT jwt = verifier.verify(token);
+
+            // 从token中获取用户信息
+            // 仅获取 id 信息剩下从数据库中取出
+            Integer userId = jwt.getClaim("id").asInt();
+            User userByid = userMapper.findByid(userId);
+            // System.out.println(userByid);
+
+            if (userByid == null){
+                System.out.println("用户不存在");
+                return new Response<>(-1, null, "用户不存在", "用户不存在");
+            }
+
+            return new Response<>(0, userByid, "获取用户信息成功", "success");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
