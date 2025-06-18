@@ -13,6 +13,7 @@ import com.neu.zboyn.car.util.BCryptUtil;
 import com.neu.zboyn.car.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -85,5 +86,27 @@ public class LoginServiceImpl implements LoginService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    @Transactional
+    public Response<Void> register(String username,
+                                   String nickname,
+                                   String password,
+                                   int deptId,
+                                   String phoneNumber) {
+        // 先插用户表
+        userMapper.insertUser(username, nickname, password, deptId, phoneNumber);
+        // 获取最新插入的用户ID
+        User user = userMapper.Login(username);
+        if (user == null) {
+            System.out.println("注册失败：用户插入失败 - " + username);
+            return new Response<>(-1, null, "注册失败，请稍后再试", "注册失败，请稍后再试");
+        }
+        // 插入用户角色表
+        Integer latestUserId = user.getUserId();
+        userMapper.insertUserRole(latestUserId);
+        System.out.println("注册成功，用户ID：" + latestUserId);
+        return new Response<>(0, null, "注册成功", "success");
     }
 }

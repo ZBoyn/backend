@@ -4,6 +4,16 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.neu.zboyn.car.mapper.UserMapper">
+    <insert id="insertUser">
+        INSERT INTO user (username, nickname, password, dept_id, phone_number, status, remark)
+        VALUES (#{username}, #{nickname}, #{password}, #{deptId}, #{phoneNumber}, '1', 'test');
+    </insert>
+
+    <insert id="insertUserRole">
+        INSERT INTO user_role (user_id, role_id)
+        VALUES (#{userId}, 3);
+    </insert>
+
 
     <select id="Login" resultType="com.neu.zboyn.car.model.User">
         SELECT * FROM user WHERE username = #{username};
@@ -11,6 +21,10 @@
 
     <select id="findByid" resultType="com.neu.zboyn.car.model.User">
         SELECT * FROM user WHERE user_id = #{userId};
+    </select>
+
+    <select id="getLatestUserId" resultType="java.lang.String">
+        SELECT user_id FROM user ORDER BY user_id DESC LIMIT 1;
     </select>
 
 </mapper>

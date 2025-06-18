@@ -4,6 +4,33 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.neu.zboyn.car.mapper.UserManageMapper">
+    <insert id="create">
+        INSERT INTO user (username, nickname, dept_id, phone_number, status, remark)
+        VALUES (#{username}, #{nickname}, #{deptId}, #{phoneNumber}, #{status}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE user
+        SET
+        username = #{userDto.username},
+        nickname = #{userDto.nickname},
+        dept_id = #{userDto.deptId},
+        phone_number = #{userDto.phoneNumber},
+        status = #{userDto.status},
+        remark = #{userDto.remark}
+        WHERE
+        user_id = #{userId}
+    </update>
+
+    <update id="resetPassword">
+        UPDATE user
+        SET password = "123456"
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM user WHERE user_id = #{userId}
+    </delete>
 
     <select id="selectUserList" resultType="com.neu.zboyn.car.model.User">
         SELECT

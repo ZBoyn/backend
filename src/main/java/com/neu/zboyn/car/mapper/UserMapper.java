@@ -9,4 +9,12 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
     User Login(@Param("username")String username);
     User findByid(@Param("userId")Integer userId);
+
+    void insertUser(@Param("username")String username, @Param("nickname")String nickname,
+                  @Param("password")String password, @Param("deptId")int deptId,
+                  @Param("phoneNumber")String phoneNumber);
+
+    void insertUserRole(@Param("userId") Integer userId);
+
+    String getLatestUserId();
 }

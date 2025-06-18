@@ -3,6 +3,7 @@ package com.neu.zboyn.car.service.impl;
 
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.mapper.UserManageMapper;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
@@ -23,5 +24,29 @@ public class UserServiceImpl implements UserService {
         long total = userManageMapper.selectUserCount(userId, username, nickname, deptId, phoneNumber, status, startTime, endTime);
         PageResult<User> pageResult = new PageResult<>(userList, total, page, pageSize);
         return new Response<>(0, pageResult, "获取成功", "success");
+    }
+
+    @Override
+    public Response<Void> createUser(UserDto userDto) {
+        userManageMapper.create(userDto);
+        return new Response<>(0, null, "用户创建成功", "success");
+    }
+
+    @Override
+    public Response<Void> updateUser(String userId, UserDto userDto) {
+        userManageMapper.update(userId, userDto);
+        return new Response<>(0, null, "<UNK>", "success");
+    }
+
+    @Override
+    public Response<Void> deleteUser(String userId) {
+        userManageMapper.delete(userId);
+        return new Response<>(0, null, "<UNK>", "success");
+    }
+
+    @Override
+    public Response<Void> resetPassword(String userId) {
+        userManageMapper.resetPassword(userId);
+        return new Response<>(0, null, "密码重置成功", "success");
     }
 }
