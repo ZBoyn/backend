@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleDto {
-    private Long roleId;
+    private String roleId;
     private String roleName;
     private String roleKey;
     private Integer roleSort;

@@ -24,7 +24,7 @@
 
     <update id="resetPassword">
         UPDATE user
-        SET password = "123456"
+        SET password = #{password}
         WHERE user_id = #{userId}
     </update>
 

@@ -39,7 +39,7 @@ public interface UserManageMapper {
 
     void delete(String userId);
 
-    void resetPassword(String userId);
+    void resetPassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
 
     void changeUserRole(String userId, String roleId);
 }

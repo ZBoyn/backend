@@ -21,8 +21,8 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
-    public Response<PageResult<RoleDto>> getRoleList(Integer page, Integer pageSize, String roleName, String roleKey, String status, String startTime, String endTime) {
-        List<Role> roles = roleMapper.selectRoleList(roleName, roleKey, status, startTime, endTime);
+    public Response<PageResult<RoleDto>> getRoleList(Integer page, Integer pageSize,String roleId, String roleName, String roleKey, String status, String startTime, String endTime) {
+        List<Role> roles = roleMapper.selectRoleList(roleId, roleName, roleKey, status, startTime, endTime);
         List<RoleDto> dtoList = new ArrayList<>();
         for (Role role : roles) {
             RoleDto dto = new RoleDto();
