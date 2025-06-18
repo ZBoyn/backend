@@ -5,7 +5,6 @@ import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.mapper.UserManageMapper;
-import com.neu.zboyn.car.model.Department;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
 import com.neu.zboyn.car.util.BCryptUtil;
@@ -63,5 +62,13 @@ public class UserServiceImpl implements UserService {
         return new Response<>(0, null, "用户角色变更成功", "success");
     }
 
+    @Override
+    public Response<User> getUserByCreatorId(String creatorId) {
+        User user = userManageMapper.findByCreatorId(creatorId);
+        if (user == null) {
+            return Response.error(404, "用户不存在", "not found");
+        }
+        return Response.success(user);
+    }
 
 }

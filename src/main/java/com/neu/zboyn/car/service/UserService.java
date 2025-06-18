@@ -6,7 +6,6 @@ import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.model.User;
 
-import java.util.List;
 
 public interface UserService {
 
@@ -34,6 +33,6 @@ public interface UserService {
 
     Response<Void> changeUserRole(String userId, String roleId);
 
-
+    Response<User> getUserByCreatorId(String creatorId);
 
 }
