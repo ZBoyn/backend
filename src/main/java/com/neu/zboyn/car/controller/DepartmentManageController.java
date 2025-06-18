@@ -31,16 +31,31 @@ public class DepartmentManageController {
         return departmentService.getDepartmentinfo(deptName, status);
     }
 
+    /**
+     * 创建新部门
+     * @param department 部门信息
+     * @return 创建结果响应
+     */
     @PostMapping("")
     public Response<Void> create(@RequestBody Department department) {
         return departmentService.insertDepartment(department);
     }
 
+    /**
+     * 更新部门信息
+     * @param department 部门信息
+     * @return  更新结果响应
+     */
     @PutMapping("")
     public Response<Void> update(@RequestBody Department department) {
         return departmentService.updateDepartment(department);
     }
 
+    /**
+     * 删除部门
+     * @param deptId 部门ID
+     * @return 删除结果响应
+     */
     @DeleteMapping("/{deptId}")
     public Response<Void> delete(@PathVariable int deptId) {
         return departmentService.deleteDepartment(deptId);
