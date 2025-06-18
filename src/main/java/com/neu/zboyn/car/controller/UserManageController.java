@@ -3,11 +3,17 @@ package com.neu.zboyn.car.controller;
 
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.dto.ShowRoleDto;
 import com.neu.zboyn.car.dto.UserDto;
+import com.neu.zboyn.car.model.Department;
 import com.neu.zboyn.car.model.User;
+import com.neu.zboyn.car.service.DepartmentService;
+import com.neu.zboyn.car.service.RoleService;
 import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户管理模块
@@ -17,6 +23,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserManageController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
 
     /**
      * 根据分页和页大小显示所有用户列表
@@ -112,5 +125,22 @@ public class UserManageController {
     ) {
         return userService.changeUserRole(userId, roleId);
     }
+
+    /**
+     * 显示所有角色
+     * @return role_id, role_name
+     */
+    @GetMapping("/roles")
+    public Response<List<ShowRoleDto>> getAllRoles() {
+        return roleService.getRoleName();
+    }
+
+    @GetMapping("/department")
+    public Response<List<Department>> getAllDepartments(){
+        return departmentService.getDepartmentinfo();
+    }
+
+
+
 
 }

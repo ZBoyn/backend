@@ -3,6 +3,7 @@ package com.neu.zboyn.car.service.impl;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.RoleDto;
+import com.neu.zboyn.car.dto.ShowRoleDto;
 import com.neu.zboyn.car.mapper.RoleMapper;
 import com.neu.zboyn.car.model.Role;
 import com.neu.zboyn.car.service.RoleService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+
 
     @Override
     public Response<PageResult<RoleDto>> getRoleList(Integer page, Integer pageSize, String roleName, String roleKey, String status, String startTime, String endTime) {
@@ -65,4 +67,11 @@ public class RoleServiceImpl implements RoleService {
         int res = roleMapper.deleteRole(roleId);
         return res > 0 ? Response.success(null) : Response.error(500, "删除失败", "delete error");
     }
-} 
+
+    @Override
+    public Response<List<ShowRoleDto>> getRoleName() {
+        List<ShowRoleDto> roles = roleMapper.getRole();
+        return Response.success(roles);
+    }
+}
+

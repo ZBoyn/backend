@@ -13,6 +13,11 @@
         <result property="remark" column="remark" />
     </resultMap>
 
+    <resultMap id="ShowRoleDtoResultMap" type="com.neu.zboyn.car.dto.ShowRoleDto">
+        <id property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+    </resultMap>
+
     <select id="selectRoleList" resultMap="RoleResultMap">
         SELECT * FROM role
         <where>
@@ -37,6 +42,10 @@
 
     <select id="selectRoleById" resultMap="RoleResultMap">
         SELECT * FROM role WHERE role_id = #{roleId}
+    </select>
+
+    <select id="getRole" resultMap="ShowRoleDtoResultMap">
+        SELECT role_id, role_name FROM role;
     </select>
 
     <insert id="insertRole" parameterType="com.neu.zboyn.car.model.Role">

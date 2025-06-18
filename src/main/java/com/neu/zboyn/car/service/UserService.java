@@ -31,4 +31,5 @@ public interface UserService {
     Response<Void> resetPassword(String userId);
 
     Response<Void> changeUserRole(String userId, String roleId);
+
 }

@@ -1,5 +1,6 @@
 package com.neu.zboyn.car.mapper;
 
+import com.neu.zboyn.car.dto.ShowRoleDto;
 import com.neu.zboyn.car.model.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,4 +13,5 @@ public interface RoleMapper {
     int insertRole(Role role);
     int updateRole(Role role);
     int deleteRole(@Param("roleId") Long roleId);
-} 
+    List<ShowRoleDto> getRole();
+}
