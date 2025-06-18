@@ -49,4 +49,10 @@ public class UserServiceImpl implements UserService {
         userManageMapper.resetPassword(userId);
         return new Response<>(0, null, "密码重置成功", "success");
     }
+
+    @Override
+    public Response<Void> changeUserRole(String userId, String roleId) {
+        userManageMapper.changeUserRole(userId, roleId);
+        return new Response<>(0, null, "用户角色变更成功", "success");
+    }
 }

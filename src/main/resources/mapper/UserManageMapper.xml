@@ -28,6 +28,12 @@
         WHERE user_id = #{userId}
     </update>
 
+    <update id="changeUserRole">
+        UPDATE user_role
+        SET role_id = #{roleId}
+        WHERE user_id = #{userId}
+    </update>
+
     <delete id="delete">
         DELETE FROM user WHERE user_id = #{userId}
     </delete>

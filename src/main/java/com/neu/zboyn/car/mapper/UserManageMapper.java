@@ -40,4 +40,6 @@ public interface UserManageMapper {
     void delete(String userId);
 
     void resetPassword(String userId);
+
+    void changeUserRole(String userId, String roleId);
 }

@@ -99,5 +99,18 @@ public class UserManageController {
         return userService.resetPassword(userId);
     }
 
+    /**
+     * 更新用户角色
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     * @return 响应结果
+     */
+    @PutMapping("/{userId}/change-role")
+    public Response<Void> changeRole(
+            @PathVariable String userId,
+            @RequestParam String roleId
+    ) {
+        return userService.changeUserRole(userId, roleId);
+    }
 
 }

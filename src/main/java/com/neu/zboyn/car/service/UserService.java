@@ -29,4 +29,6 @@ public interface UserService {
     Response<Void> deleteUser(String userId);
 
     Response<Void> resetPassword(String userId);
+
+    Response<Void> changeUserRole(String userId, String roleId);
 }
