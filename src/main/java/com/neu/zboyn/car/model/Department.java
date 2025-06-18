@@ -13,8 +13,7 @@ public class Department {
     private int deptId;
     private int parentId;
     private String deptName;
-    private int orderNum;
     private Integer status;
     private Date createTime;
-    private Date updateTime;
+    private String remark;
 }
