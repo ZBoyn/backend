@@ -3,12 +3,11 @@ package com.neu.zboyn.car.controller;
 
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户管理模块
@@ -52,5 +51,53 @@ public class UserManageController {
         // 调用Service
         return userService.getUserList(page, pageSize, id, username, nickname, deptId, phoneNumber, status, startTime, endTime);
     }
+
+    /**
+     * 创建用户
+     * @param userDto 用户数据传输对象
+     * @return 响应结果
+     */
+    @RequestMapping("")
+    public Response<Void> create(
+            @RequestBody UserDto userDto){
+        // 调用Service
+        return userService.createUser(userDto);
+    }
+
+    /**
+     * 更新用户信息
+     * @param userId 用户ID
+     * @param userDto 用户数据传输对象
+     * @return 响应结果
+     */
+    @PutMapping("/{userId}")
+    public Response<Void> updateUser(
+            @PathVariable String userId,
+            @RequestBody UserDto userDto) {
+        return userService.updateUser(userId, userDto);
+    }
+
+    /**
+     * 删除用户
+     * @param userId 用户ID
+     * @return 响应结果
+     */
+    @DeleteMapping("/{userId}")
+    public Response<Void> deleteUser(
+            @PathVariable String userId) {
+        return userService.deleteUser(userId);
+    }
+
+    /**
+     * 更新用户密码
+     * @param userId 用户ID
+     * @return 响应结果
+     */
+    @PutMapping("/{userId}/reset-password")
+    public Response<Void> resetPassword(
+            @PathVariable String userId) {
+        return userService.resetPassword(userId);
+    }
+
 
 }

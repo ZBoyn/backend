@@ -1,5 +1,6 @@
 package com.neu.zboyn.car.mapper;
 
+import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,4 +33,11 @@ public interface UserManageMapper {
             @Param("endTime") String endTime
     );
 
+    void create(UserDto userDto);
+
+    void update(@Param("userId") String userId, @Param("userDto")UserDto userDto);
+
+    void delete(String userId);
+
+    void resetPassword(String userId);
 }
