@@ -15,4 +15,5 @@ public interface RoleService {
     Response<Void> deleteRole(Long roleId);
     Response<List<ShowRoleDto>> getRoleName();
 
+    Response<Void> changeRoleUser(String roleId, String userId);
 }
