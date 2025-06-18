@@ -30,13 +30,14 @@ public class RoleManageController {
     public Response<PageResult<RoleDto>> getRoleList(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String roleId,
             @RequestParam(required = false) String roleName,
             @RequestParam(required = false) String roleKey,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String startTime,
             @RequestParam(required = false) String endTime
     ) {
-        return roleService.getRoleList(page, pageSize, roleName, roleKey, status, startTime, endTime);
+        return roleService.getRoleList(page, pageSize, roleId, roleName, roleKey, status, startTime, endTime);
     }
 
     /**

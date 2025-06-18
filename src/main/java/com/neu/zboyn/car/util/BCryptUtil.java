@@ -37,4 +37,11 @@ public class BCryptUtil {
         return encoder.matches(plainTextPassword, hashedPassword);
     }
 
+    public static void main(String[] args) {
+        BCryptUtil bCryptUtil = new BCryptUtil();
+        String password = "123456";
+        System.out.println("原始密码: " + password);
+        String hashedPassword = bCryptUtil.hashPassword(password);
+        System.out.println("加密后的密码: " + hashedPassword);
+    }
 }
