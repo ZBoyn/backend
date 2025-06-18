@@ -1,11 +1,13 @@
 package com.neu.zboyn.car.controller;
 
+import com.neu.zboyn.car.dto.*;
+import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.RoleService;
-import com.neu.zboyn.car.dto.RoleDto;
-import com.neu.zboyn.car.dto.PageResult;
-import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class RoleManageController {
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取角色列表
@@ -79,4 +83,17 @@ public class RoleManageController {
     public Response<Void> delete(@PathVariable Long roleId) {
         return roleService.deleteRole(roleId);
     }
+
+    @PutMapping("/{roleId}/change-user")
+        public Response<Void> changeUser(
+                @PathVariable String roleId,
+                @RequestParam String userId
+    )
+        {
+            return roleService.changeRoleUser(userId, roleId);
+        }
+
+
+
+
 }

@@ -71,4 +71,10 @@
     <delete id="deleteRole">
         DELETE FROM role WHERE role_id = #{roleId}
     </delete>
+
+    <update id="changeRoleUser">
+        UPDATE user_role
+        SET role_id = #{roleId}
+        WHERE user_id = #{userId}
+    </update>
 </mapper> 

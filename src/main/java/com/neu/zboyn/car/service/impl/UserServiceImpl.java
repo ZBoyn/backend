@@ -5,6 +5,7 @@ import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.mapper.UserManageMapper;
+import com.neu.zboyn.car.model.Department;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
 import com.neu.zboyn.car.util.BCryptUtil;
@@ -61,4 +62,6 @@ public class UserServiceImpl implements UserService {
         userManageMapper.changeUserRole(userId, roleId);
         return new Response<>(0, null, "用户角色变更成功", "success");
     }
+
+
 }

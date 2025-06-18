@@ -73,5 +73,11 @@ public class RoleServiceImpl implements RoleService {
         List<ShowRoleDto> roles = roleMapper.getRole();
         return Response.success(roles);
     }
+
+    @Override
+    public Response<Void> changeRoleUser(String roleId, String userId) {
+        roleMapper.changeRoleUser(roleId, userId);
+        return new Response<>(0, null, "用户角色变更成功", "success");
+    }
 }
 

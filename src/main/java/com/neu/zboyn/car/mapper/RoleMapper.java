@@ -14,4 +14,6 @@ public interface RoleMapper {
     int updateRole(Role role);
     int deleteRole(@Param("roleId") Long roleId);
     List<ShowRoleDto> getRole();
+
+    void changeRoleUser(String roleId, String userId);
 }
