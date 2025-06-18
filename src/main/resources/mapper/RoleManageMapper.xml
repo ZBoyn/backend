@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.zboyn.car.mapper.RoleMapper">
+    <resultMap id="RoleResultMap" type="com.neu.zboyn.car.model.Role">
+        <id property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="roleKey" column="role_key" />
+        <result property="roleSort" column="role_sort" />
+        <result property="dataScope" column="data_scope" />
+        <result property="status" column="status" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="selectRoleList" resultMap="RoleResultMap">
+        SELECT * FROM role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE CONCAT('%', #{roleName}, '%')
+            </if>
+            <if test="roleKey != null and roleKey != ''">
+                AND role_key LIKE CONCAT('%', #{roleKey}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND create_time >= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY role_sort ASC
+    </select>
+
+    <select id="selectRoleById" resultMap="RoleResultMap">
+        SELECT * FROM role WHERE role_id = #{roleId}
+    </select>
+
+    <insert id="insertRole" parameterType="com.neu.zboyn.car.model.Role">
+        INSERT INTO role (role_name, role_key, role_sort, data_scope, status, create_time, update_time, remark)
+        VALUES (#{roleName}, #{roleKey}, #{roleSort}, #{dataScope}, #{status}, #{createTime}, #{updateTime}, #{remark})
+    </insert>
+
+    <update id="updateRole" parameterType="com.neu.zboyn.car.model.Role">
+        UPDATE role
+        SET role_name = #{roleName},
+            role_key = #{roleKey},
+            role_sort = #{roleSort},
+            data_scope = #{dataScope},
+            status = #{status},
+            update_time = #{updateTime},
+            remark = #{remark}
+        WHERE role_id = #{roleId}
+    </update>
+
+    <delete id="deleteRole">
+        DELETE FROM role WHERE role_id = #{roleId}
+    </delete>
+</mapper> 
