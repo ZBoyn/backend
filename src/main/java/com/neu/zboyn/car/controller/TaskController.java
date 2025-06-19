@@ -2,7 +2,9 @@ package com.neu.zboyn.car.controller;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.TaskDto;
 import com.neu.zboyn.car.dto.PageResult;
+import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.TaskService;
+import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,9 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取任务列表
@@ -79,5 +84,15 @@ public class TaskController {
     @DeleteMapping("/{taskId}")
     public Response<Void> delete(@PathVariable String taskId) {
         return taskService.deleteTask(taskId);
+    }
+
+    /**
+     * 获取任务创建者的用户信息
+     * @param creatorId 创建者ID
+     * @return 用户信息
+     */
+    @GetMapping("/task/{creatorId}")
+    public Response<User> getCreatorInfo(@PathVariable String creatorId) {
+        return userService.getUserByCreatorId(creatorId);
     }
 }

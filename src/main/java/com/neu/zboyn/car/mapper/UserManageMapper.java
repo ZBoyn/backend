@@ -42,4 +42,6 @@ public interface UserManageMapper {
     void resetPassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
 
     void changeUserRole(String userId, String roleId);
+
+    User findByCreatorId(String creatorId);
 }

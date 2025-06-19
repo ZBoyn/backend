@@ -4,6 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.neu.zboyn.car.mapper.UserManageMapper">
+    <resultMap id="UserResultMap" type="com.neu.zboyn.car.model.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="password" column="password"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
     <insert id="create">
         INSERT INTO user (username, nickname, dept_id, phone_number, status, remark)
         VALUES (#{username}, #{nickname}, #{deptId}, #{phoneNumber}, #{status}, #{remark})
@@ -119,5 +131,8 @@
         </where>
     </select>
 
+    <select id="findByCreatorId" resultMap="UserResultMap">
+        SELECT * FROM user WHERE user_id = #{creatorId}
+    </select>
 
 </mapper>

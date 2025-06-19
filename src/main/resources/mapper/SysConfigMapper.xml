@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neu.zboyn.car.mapper.SysConfigMapper">
+    <resultMap id="SysconfigResultMap" type="com.neu.zboyn.car.model.Sysconfig">
+        <id property="configId" column="config_id"/>
+        <result property="configName" column="config_name"/>
+        <result property="configKey" column="config_key"/>
+        <result property="configValue" column="config_value"/>
+        <result property="configType" column="config_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="selectConfigList" resultMap="SysconfigResultMap">
+        SELECT * FROM sys_config
+        <where>
+            <if test="configName != null and configName != ''">
+                AND config_name LIKE CONCAT('%', #{configName}, '%')
+            </if>
+            <if test="configKey != null and configKey != ''">
+                AND config_key LIKE CONCAT('%', #{configKey}, '%')
+            </if>
+            <if test="configType != null and configType != ''">
+                AND config_type = #{configType}
+            </if>
+        </where>
+        ORDER BY config_id ASC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectConfigCount" resultType="long">
+        SELECT COUNT(*) FROM sys_config
+        <where>
+            <if test="configName != null and configName != ''">
+                AND config_name LIKE CONCAT('%', #{configName}, '%')
+            </if>
+            <if test="configKey != null and configKey != ''">
+                AND config_key LIKE CONCAT('%', #{configKey}, '%')
+            </if>
+            <if test="configType != null and configType != ''">
+                AND config_type = #{configType}
+            </if>
+        </where>
+    </select>
+
+    <insert id="create">
+        INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_time, update_time, remark)
+        VALUES (#{configName}, #{configKey}, #{configValue}, #{configType}, #{createTime}, #{updateTime}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE sys_config
+        <set>
+            <if test="configName != null and configName != ''">
+                config_name = #{configName},
+            </if>
+            <if test="configKey != null and configKey != ''">
+                config_key = #{configKey},
+            </if>
+            <if test="configValue != null and configValue != ''">
+                config_value = #{configValue},
+            </if>
+            <if test="configType != null and configType != ''">
+                config_type = #{configType},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </set>
+        WHERE config_id = #{configId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM sys_config WHERE config_id = #{configId}
+    </delete>
+
+    <select id="selectByConfigKey" resultMap="SysconfigResultMap">
+        SELECT * FROM sys_config WHERE config_key = #{configKey} LIMIT 1
+    </select>
+</mapper> 

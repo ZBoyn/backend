@@ -11,8 +11,8 @@ import java.util.Date;
 public class Task {
     private String taskId;
     private String taskName;
-    private Long creatorId;
-    private Long executorId;
+    private long creatorId;
+    private long executorId;
     private String startLocation;
     private Double distance;
     private Date deadlineTime;
