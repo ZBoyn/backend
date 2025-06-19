@@ -43,11 +43,13 @@ public class DepartmentManageController {
 
     /**
      * 更新部门信息
+     * @param deptId 部门ID
      * @param department 部门信息
      * @return  更新结果响应
      */
-    @PutMapping("")
-    public Response<Void> update(@RequestBody Department department) {
+    @PutMapping("/{deptId}")
+    public Response<Void> update(@PathVariable int deptId, @RequestBody Department department) {
+        department.setDeptId(deptId); // 确保department对象里有id
         return departmentService.updateDepartment(department);
     }
 
