@@ -9,9 +9,9 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://zboynabc.mysql.database.azure.com:3306/smartcar"/>
-                <property name="username" value="zboyn"/>
-                <property name="password" value="faith213.5"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/Car"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
             </dataSource>
         </environment>
     </environments>
