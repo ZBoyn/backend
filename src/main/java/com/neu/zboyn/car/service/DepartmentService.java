@@ -8,4 +8,8 @@ import java.util.List;
 public interface DepartmentService
 {
     Response<List<Department>> getDepartmentinfo();
+    Response<List<Department>> getDepartmentinfo(String deptName, Integer status);
+    Response<Void> insertDepartment(Department department);
+    Response<Void> updateDepartment(Department department);
+    Response<Void> deleteDepartment(int deptId);
 }

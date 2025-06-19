@@ -5,15 +5,43 @@
         <id property="deptId" column="dept_id" />
         <result property="deptName" column="dept_name" />
         <result property="parentId" column="parent_id" />
-        <result property="orderNum" column="order_num" />
         <result property="status" column="status" />
-        <result property="createTime" column="create_time" />
-        <result property="updateTime" column="update_time" />
     </resultMap>
 
     <select id="getDepartment" resultMap="DepartmentResultMap">
         SELECT *
         FROM department
-        ORDER BY order_num
+        ORDER BY dept_id
     </select>
+
+    <select id="getZBYDepartment" resultType="com.neu.zboyn.car.model.Department">
+        SELECT *
+        FROM department
+        <where>
+            <if test="deptName != null and deptName != ''">
+                AND dept_name LIKE CONCAT('%', #{deptName}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertDepartment" parameterType="com.neu.zboyn.car.model.Department">
+        INSERT INTO department (parent_id, dept_name, status, remark)
+        VALUES (#{parentId}, #{deptName}, #{status}, #{remark})
+    </insert>
+
+    <update id="updateDepartment" parameterType="com.neu.zboyn.car.model.Department">
+        UPDATE department
+        SET parent_id = #{parentId},
+            dept_name = #{deptName},
+            status = #{status},
+            remark = #{remark}
+        WHERE dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteDepartment" parameterType="int">
+        DELETE FROM department WHERE dept_id = #{deptId}
+    </delete>
 </mapper>
