@@ -33,5 +33,5 @@ public interface UserService {
     Response<Void> changeUserRole(String userId, String roleId);
 
 
-
+    Response<User> getUserByCreatorId(String creatorId);
 }

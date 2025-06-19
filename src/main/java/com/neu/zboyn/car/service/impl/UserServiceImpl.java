@@ -8,6 +8,8 @@ import com.neu.zboyn.car.mapper.UserManageMapper;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
 import com.neu.zboyn.car.util.BCryptUtil;
+import com.neu.zboyn.car.service.SysConfigService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptUtil bCryptUtil;
+
+    @Autowired
+    private SysConfigService sysConfigService;
 
     @Override
     public Response<PageResult<User>> getUserList(int page, int pageSize, String userId, String username, String nickname, Long deptId, String phoneNumber, Integer status, String startTime, String endTime) {
@@ -49,10 +54,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Response<Void> resetPassword(String userId) {
-        String hashPassword = bCryptUtil.hashPassword("123456");
+        String initPassword = "123456";
+        if (sysConfigService != null) {
+            com.neu.zboyn.car.model.Sysconfig config = sysConfigService.getByConfigKey("sys.user.initPassword");
+            if (config != null && config.getConfigValue() != null && !config.getConfigValue().isEmpty()) {
+                initPassword = config.getConfigValue();
+            }
+        }
+        String hashPassword = bCryptUtil.hashPassword(initPassword);
         userManageMapper.resetPassword(userId, hashPassword);
-
         return new Response<>(0, null, "密码重置成功", "success");
     }
 
