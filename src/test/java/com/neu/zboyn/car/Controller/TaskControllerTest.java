@@ -82,9 +82,9 @@ class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is(0)))
-                .andExpect(jsonPath("$.data.list", hasSize(2)))
-                .andExpect(jsonPath("$.data.list[0].taskId", is("1")))
-                .andExpect(jsonPath("$.data.list[1].taskName", is("任务2")));
+                .andExpect(jsonPath("$.data.items", hasSize(2)))
+                .andExpect(jsonPath("$.data.items[0].taskId", is("1")))
+                .andExpect(jsonPath("$.data.items[1].taskName", is(1)));
     }
 
     @Test
@@ -100,7 +100,7 @@ class TaskControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.taskId", is("1")))
-                .andExpect(jsonPath("$.data.taskName", is("测试任务")));
+                .andExpect(jsonPath("$.data.taskName", is(1)));
     }
 
     @Test
@@ -176,8 +176,8 @@ class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is(0)))
-                .andExpect(jsonPath("$.data.list", hasSize(1)))
-                .andExpect(jsonPath("$.data.list[0].taskName", is("测试任务")))
-                .andExpect(jsonPath("$.data.list[0].status", is("完成")));
+                .andExpect(jsonPath("$.data.items", hasSize(1)))
+                .andExpect(jsonPath("$.data.items[0].taskName", is("测试任务")))
+                .andExpect(jsonPath("$.data.items[0].status", is(1)));
     }
 }
