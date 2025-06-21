@@ -5,7 +5,7 @@ import com.neu.zboyn.car.dto.TaskDto;
 import com.neu.zboyn.car.dto.PageResult;
 
 public interface TaskService {
-    Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskName, String status, String startTime, String endTime);
+    Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskId, String taskName, Long creatorId, Long executorId, String status, String startTime, String endTime);
     Response<TaskDto> getTaskById(String taskId);
     Response<Void> createTask(TaskDto taskDto);
     Response<Void> updateTask(TaskDto taskDto);

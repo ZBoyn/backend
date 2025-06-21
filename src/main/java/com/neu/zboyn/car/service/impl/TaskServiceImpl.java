@@ -19,8 +19,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Override
-    public Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskName, String status, String startTime, String endTime) {
-        List<Task> tasks = taskMapper.selectTaskList(taskName, status, startTime, endTime);
+    public Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskId, String taskName, Long creatorId, Long executorId, String status, String startTime, String endTime) {
+        List<Task> tasks = taskMapper.selectTaskList(taskId, taskName, creatorId, executorId, status, startTime, endTime);
         List<TaskDto> dtoList = new ArrayList<>();
         for (Task task : tasks) {
             TaskDto dto = new TaskDto();
