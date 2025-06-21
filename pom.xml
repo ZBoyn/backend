@@ -118,6 +118,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Maven -->
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<version>3.5.10</version> <!-- 根据项目需求调整版本 -->
+		</dependency>
 	</dependencies>
 
 	<build>
