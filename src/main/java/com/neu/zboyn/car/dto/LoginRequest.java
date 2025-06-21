@@ -16,4 +16,11 @@ public class LoginRequest {
 
     @JsonProperty
     private Boolean captcha;
+
+    public LoginRequest(String selectAccount, String username, String password, Boolean captcha) {
+    }
+
+    public LoginRequest() {
+
+    }
 }
