@@ -58,13 +58,29 @@
 
     <update id="updateRole" parameterType="com.neu.zboyn.car.model.Role">
         UPDATE role
-        SET role_name = #{roleName},
-            role_key = #{roleKey},
-            role_sort = #{roleSort},
-            data_scope = #{dataScope},
-            status = #{status},
-            update_time = #{updateTime},
-            remark = #{remark}
+        <set>
+            <if test="role.roleName != null">
+                role_name = #{role.roleName},
+            </if>
+            <if test="role.roleKey != null">
+                role_key = #{role.roleKey},
+            </if>
+            <if test="role.roleSort != null">
+                role_sort = #{role.roleSort},
+            </if>
+            <if test="role.dataScope != null">
+                data_scope = #{role.dataScope},
+            </if>
+            <if test="role.status != null">
+                status = #{role.status},
+            </if>
+            <if test="role.updateTime != null">
+                update_time = #{role.updateTime},
+            </if>
+            <if test="role.remark != null">
+                remark = #{role.remark},
+            </if>
+        </set>
         WHERE role_id = #{roleId}
     </update>
 

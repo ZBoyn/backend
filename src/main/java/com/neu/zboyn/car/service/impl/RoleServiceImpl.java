@@ -55,10 +55,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Response<Void> updateRole(RoleDto roleDto) {
+    public Response<Void> updateRole(String roleId,RoleDto roleDto) {
         Role role = new Role();
         BeanUtils.copyProperties(roleDto, role);
-        int res = roleMapper.updateRole(role);
+        int res = roleMapper.updateRole(roleId, role);
         return res > 0 ? Response.success(null) : Response.error(500, "更新失败", "update error");
     }
 
