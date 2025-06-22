@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,14 +49,17 @@ public class TaskServiceImpl implements TaskService {
     public Response<Void> createTask(TaskDto taskDto) {
         Task task = new Task();
         BeanUtils.copyProperties(taskDto, task);
+        task.setCreateTime(new Date());
+        task.setUploadTime(new Date());
         int res = taskMapper.insertTask(task);
         return res > 0 ? Response.success(null) : Response.error(500, "新增失败", "insert error");
     }
 
     @Override
-    public Response<Void> updateTask(TaskDto taskDto) {
+    public Response<Void> updateTask(String taskId, TaskDto taskDto) {
         Task task = new Task();
         BeanUtils.copyProperties(taskDto, task);
+        task.setTaskId(taskId);
         int res = taskMapper.updateTask(task);
         return res > 0 ? Response.success(null) : Response.error(500, "更新失败", "update error");
     }

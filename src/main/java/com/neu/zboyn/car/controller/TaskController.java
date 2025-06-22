@@ -74,9 +74,11 @@ public class TaskController {
      * @param taskDto 任务信息
      * @return 更新结果
      */
-    @PutMapping("")
-    public Response<Void> update(@RequestBody TaskDto taskDto) {
-        return taskService.updateTask(taskDto);
+    @PutMapping("/{taskId}")
+    public Response<Void> update(
+            @PathVariable String taskId,
+            @RequestBody TaskDto taskDto) {
+        return taskService.updateTask(taskId, taskDto);
     }
 
     /**
