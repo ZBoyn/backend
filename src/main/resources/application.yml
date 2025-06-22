@@ -16,3 +16,7 @@ mybatis:
   configuration:
     # 驼峰和下划线命名自动转换
     map-underscore-to-camel-case: true
+
+file:
+  upload-dir: src/main/resources/upload
+  server-url: http://172.18.33.246:8082
