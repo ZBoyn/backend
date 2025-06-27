@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/defect")
+@RequestMapping("/api/inspection/defect")
 public class DefectController {
 
     @Autowired
@@ -19,10 +19,11 @@ public class DefectController {
     public Response<PageResult<DefectDto>> list(
             @RequestParam int page,
             @RequestParam int pageSize,
+            @RequestParam(required = false) String taskId,
             @RequestParam(required = false) String defectType,
-            @RequestParam(required = false) String severity
+            @RequestParam(required = false) String is_verified
     ) {
-        return defectService.getDefectList(page, pageSize, defectType, severity);
+        return defectService.getDefectList(page, pageSize, taskId, defectType, is_verified);
     }
 
     // 新增
@@ -33,7 +34,7 @@ public class DefectController {
     }
 
     // 修改
-    @PostMapping("/update")
+    @PostMapping("/{id}")
     public Response<Void> update(@RequestBody DefectDto defectDto) {
         return defectService.updateDefect(defectDto);
     }

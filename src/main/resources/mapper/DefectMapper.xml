@@ -28,8 +28,11 @@
             <if test="defectType != null and defectType != ''">
                 AND defect_type = #{defectType}
             </if>
-            <if test="severity != null and severity != ''">
-                AND severity = #{severity}
+            <if test="taskId != null">
+                AND task_id = #{taskId}
+            </if>
+            <if test="is_verified != null">
+                AND is_verified = #{is_verified}
             </if>
         </where>
         ORDER BY defect_id ASC
@@ -40,11 +43,14 @@
     <select id="selectDefectCount" resultType="long">
         SELECT COUNT(*) FROM defect
         <where>
+            <if test="taskId != null and taskId != ''">
+                AND task_id = #{taskId}
+            </if>
             <if test="defectType != null and defectType != ''">
                 AND defect_type = #{defectType}
             </if>
-            <if test="severity != null and severity != ''">
-                AND severity = #{severity}
+            <if test="is_verified != null and is_verified != ''">
+                AND is_verified = #{is_verified}
             </if>
         </where>
     </select>
@@ -68,7 +74,7 @@
             <if test="defectType != null">defect_type = #{defectType},</if>
             <if test="distanceFromOrigin != null">distance_from_origin = #{distanceFromOrigin},</if>
             <if test="imageUrls != null">image_urls = #{imageUrls},</if>
-            <if test="isVerified != null">is_verified = #{isVerified},</if>
+            <if test="is_verified != null">is_verified = #{is_verified},</if>
             <if test="severity != null">severity = #{severity},</if>
             <if test="defectLength != null">defect_length = #{defectLength},</if>
             <if test="defectArea != null">defect_area = #{defectArea},</if>

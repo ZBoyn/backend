@@ -7,13 +7,17 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 @Mapper
 public interface DefectMapper {
-    List<Defect> selectDefectList(@Param("defectType") String defectType,
-                                  @Param("severity") String severity,
-                                  @Param("offset") int offset,
-                                  @Param("pageSize") int pageSize);
+    List<Defect> selectDefectList(
+            @Param("taskId") String taskId,
+            @Param("defectType") String defectType,
+            @Param("is_verified") String isVerified,
+            @Param("offset") int offset,
+            @Param("pageSize") int pageSize);
 
-    long selectDefectCount(@Param("defectType") String defectType,
-                           @Param("severity") String severity);
+    long selectDefectCount(
+            @Param("taskId") String taskId,
+            @Param("defectType") String defectType,
+            @Param("is_verified") String isVerified);
 
     void create(Defect defect);
 

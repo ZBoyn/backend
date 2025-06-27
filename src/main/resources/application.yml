@@ -18,5 +18,12 @@ mybatis:
     map-underscore-to-camel-case: true
 
 file:
-  upload-dir: src/main/resources/upload
-  server-url: http://172.18.33.246:8082
+  upload-dir: "C:/Users/27978/Desktop/SmartCar/upload"
+  server-url: http://localhost:8082
+
+server:
+  port: 8082
+
+ai:
+  detection-service:
+    url: "http://127.0.0.1:8001/detect"

@@ -7,6 +7,7 @@ import com.neu.zboyn.car.mapper.DefectMapper;
 import com.neu.zboyn.car.model.Defect;
 import com.neu.zboyn.car.service.DefectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
     private DefectMapper defectMapper;
 
+    @Value("${file.server-url}")
+    private String serverUrl;
+
     private DefectDto toDto(Defect defect) {
         if (defect == null) return null;
         DefectDto dto = new DefectDto();
@@ -26,9 +30,19 @@ public class DefectServiceImpl implements DefectService {
         dto.setTaskId(defect.getTaskId());
         dto.setDefectType(defect.getDefectType());
         dto.setDistanceFromOrigin(defect.getDistanceFromOrigin());
-        // 图片URL分割
+        // 图片URL分割并拼接完整路径
         if (defect.getImageUrls() != null && !defect.getImageUrls().isEmpty()) {
-            dto.setImageUrls(Arrays.asList(defect.getImageUrls().split(",")));
+            List<String> relativeUrls = Arrays.asList(defect.getImageUrls().split(","));
+            List<String> fullUrls = new ArrayList<>();
+            for (String rel : relativeUrls) {
+                // 避免重复拼接
+                if (rel.startsWith("http")) {
+                    fullUrls.add(rel);
+                } else {
+                    fullUrls.add(serverUrl + "/uploads/" + rel.replaceFirst("^/+", ""));
+                }
+            }
+            dto.setImageUrls(fullUrls);
         }
         dto.setIsVerified(defect.getIsVerified() != null && defect.getIsVerified() ? "是" : "否");
         dto.setSeverity(defect.getSeverity());
@@ -64,10 +78,10 @@ public class DefectServiceImpl implements DefectService {
     }
 
     @Override
-    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String defectType, String severity) {
+    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String taskId, String defectType, String is_verified) {
         int offset = (page - 1) * pageSize;
-        List<Defect> list = defectMapper.selectDefectList(defectType, severity, offset, pageSize);
-        long total = defectMapper.selectDefectCount(defectType, severity);
+        List<Defect> list = defectMapper.selectDefectList(taskId, defectType, is_verified, offset, pageSize);
+        long total = defectMapper.selectDefectCount(taskId, defectType, is_verified);
         List<DefectDto> dtoList = new ArrayList<>();
         for (Defect d : list) {
             dtoList.add(toDto(d));
