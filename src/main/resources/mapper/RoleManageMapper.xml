@@ -100,4 +100,30 @@
         SET role_id = #{roleId}
         WHERE user_id = #{userId}
     </update>
+
+    <!-- 根据角色ID查找用户 -->
+    <select id="getUsersByRoleId" resultType="com.neu.zboyn.car.model.User">
+        SELECT u.* FROM user u
+        INNER JOIN user_role ur ON u.user_id = ur.user_id
+        WHERE ur.role_id = #{roleId}
+    </select>
+
+    <!-- 批量插入user_role -->
+    <insert id="insertUserRoles">
+        INSERT INTO user_role (user_id, role_id)
+        VALUES
+        <foreach collection="userIds" item="userId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
+
+    <!-- 批量删除user_role -->
+    <delete id="deleteUserRoles">
+        DELETE FROM user_role
+        WHERE role_id = #{roleId}
+        AND user_id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
 </mapper> 
