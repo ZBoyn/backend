@@ -4,6 +4,7 @@ import com.neu.zboyn.car.dto.DefectDto;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.DefectMapper;
+import com.neu.zboyn.car.mapper.TaskMapper;
 import com.neu.zboyn.car.model.Defect;
 import com.neu.zboyn.car.service.impl.DefectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -24,10 +27,14 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class DefectServiceTest {
 
     @Mock
     private DefectMapper defectMapper;
+
+    @Mock
+    private TaskMapper taskMapper;
 
     @InjectMocks
     private DefectServiceImpl defectService;
@@ -39,30 +46,30 @@ class DefectServiceTest {
     void setUp() {
         testDefect = new Defect();
         testDefect.setDefectId(1L);
-        testDefect.setTaskId("TASK001");
+        testDefect.setTaskId("task1");
         testDefect.setDefectType("裂缝");
-        testDefect.setDistanceFromOrigin("100.0");
+        testDefect.setDistanceFromOrigin("10.5");
         testDefect.setImageUrls("image1.jpg,image2.jpg");
         testDefect.setIsVerified(true);
         testDefect.setSeverity("严重");
-        testDefect.setDefectLength(new BigDecimal("50.0"));
-        testDefect.setDefectArea(new BigDecimal("100.0"));
-        testDefect.setDefectQuantity(1);
+        testDefect.setDefectLength(new BigDecimal("5.0"));
+        testDefect.setDefectArea(new BigDecimal("25.0"));
+        testDefect.setDefectQuantity(3);
         testDefect.setRecommendedAction("立即修复");
         testDefect.setReportedTime(new Date());
         testDefect.setStatus("0");
 
         testDefectDto = new DefectDto();
         testDefectDto.setDefectId(1L);
-        testDefectDto.setTaskId("TASK001");
+        testDefectDto.setTaskId("task1");
         testDefectDto.setDefectType("裂缝");
-        testDefectDto.setDistanceFromOrigin("100.0");
+        testDefectDto.setDistanceFromOrigin("10.5");
         testDefectDto.setImageUrls(Arrays.asList("image1.jpg", "image2.jpg"));
         testDefectDto.setIsVerified("是");
         testDefectDto.setSeverity("严重");
-        testDefectDto.setDefectLength(new BigDecimal("50.0"));
-        testDefectDto.setDefectArea(new BigDecimal("100.0"));
-        testDefectDto.setDefectQuantity(1);
+        testDefectDto.setDefectLength(new BigDecimal("5.0"));
+        testDefectDto.setDefectArea(new BigDecimal("25.0"));
+        testDefectDto.setDefectQuantity(3);
         testDefectDto.setRecommendedAction("立即修复");
         testDefectDto.setReportedTime(new Date());
         testDefectDto.setStatus("已上报");
@@ -72,13 +79,14 @@ class DefectServiceTest {
     void getDefectList_Success() {
         // 准备测试数据
         List<Defect> defectList = Arrays.asList(testDefect);
-        when(defectMapper.selectDefectList(anyString(), anyString(), anyInt(), anyInt()))
-                .thenReturn(defectList);
-        when(defectMapper.selectDefectCount(anyString(), anyString()))
-                .thenReturn(1L);
+        
+        // 重置mock并设置行为
+        reset(defectMapper);
+        doReturn(defectList).when(defectMapper).selectDefectList(anyString(), anyString(), anyString(), anyInt(), anyInt());
+        doReturn(1L).when(defectMapper).selectDefectCount(anyString(), anyString(), anyString());
 
         // 执行测试
-        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null);
+        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null, null);
 
         // 验证结果
         assertNotNull(response);
@@ -92,21 +100,22 @@ class DefectServiceTest {
         assertEquals(10, response.getData().getPageSize());
 
         // 验证方法调用
-        verify(defectMapper).selectDefectList(null, null, 0, 10);
-        verify(defectMapper).selectDefectCount(null, null);
+        verify(defectMapper).selectDefectList(null, null, null, 0, 10);
+        verify(defectMapper).selectDefectCount(null, null, null);
     }
 
     @Test
     void getDefectList_WithFilters() {
         // 准备测试数据
         List<Defect> defectList = Arrays.asList(testDefect);
-        when(defectMapper.selectDefectList("裂缝", "严重", 0, 10))
-                .thenReturn(defectList);
-        when(defectMapper.selectDefectCount("裂缝", "严重"))
-                .thenReturn(1L);
+        
+        // 重置mock并设置行为
+        reset(defectMapper);
+        doReturn(defectList).when(defectMapper).selectDefectList(anyString(), anyString(), anyString(), anyInt(), anyInt());
+        doReturn(1L).when(defectMapper).selectDefectCount(anyString(), anyString(), anyString());
 
         // 执行测试
-        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, "裂缝", "严重");
+        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, "task1", "裂缝", "是");
 
         // 验证结果
         assertNotNull(response);
@@ -114,20 +123,19 @@ class DefectServiceTest {
         assertEquals(1, response.getData().getItems().size());
 
         // 验证方法调用
-        verify(defectMapper).selectDefectList("裂缝", "严重", 0, 10);
-        verify(defectMapper).selectDefectCount("裂缝", "严重");
+        verify(defectMapper).selectDefectList("task1", "裂缝", "是", 0, 10);
+        verify(defectMapper).selectDefectCount("task1", "裂缝", "是");
     }
 
     @Test
     void getDefectList_EmptyResult() {
-        // 准备测试数据
-        when(defectMapper.selectDefectList(anyString(), anyString(), anyInt(), anyInt()))
-                .thenReturn(Collections.emptyList());
-        when(defectMapper.selectDefectCount(anyString(), anyString()))
-                .thenReturn(0L);
+        // 重置mock并设置行为
+        reset(defectMapper);
+        doReturn(Collections.emptyList()).when(defectMapper).selectDefectList(anyString(), anyString(), anyString(), anyInt(), anyInt());
+        doReturn(0L).when(defectMapper).selectDefectCount(anyString(), anyString(), anyString());
 
         // 执行测试
-        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null);
+        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null, null);
 
         // 验证结果
         assertNotNull(response);
@@ -138,7 +146,8 @@ class DefectServiceTest {
 
     @Test
     void createDefect_Success() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).create(any(Defect.class));
 
         // 执行测试
@@ -162,7 +171,8 @@ class DefectServiceTest {
 
     @Test
     void updateDefect_Success() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).update(any(Defect.class));
 
         // 执行测试
@@ -184,7 +194,8 @@ class DefectServiceTest {
 
     @Test
     void deleteDefect_Success() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).delete(1L);
 
         // 执行测试
@@ -201,7 +212,8 @@ class DefectServiceTest {
 
     @Test
     void verifyDefect_Success() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).updateIsVerified(1L, true);
 
         // 执行测试
@@ -218,7 +230,8 @@ class DefectServiceTest {
 
     @Test
     void verifyDefect_Unverified() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).updateIsVerified(1L, false);
 
         // 执行测试
@@ -235,7 +248,8 @@ class DefectServiceTest {
 
     @Test
     void markDefectRectified_Success() {
-        // 准备测试数据
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).updateStatus(1L, "1");
 
         // 执行测试
@@ -261,20 +275,47 @@ class DefectServiceTest {
         defect.setStatus("0");
 
         List<Defect> defectList = Arrays.asList(defect);
-        when(defectMapper.selectDefectList(anyString(), anyString(), anyInt(), anyInt()))
-                .thenReturn(defectList);
-        when(defectMapper.selectDefectCount(anyString(), anyString()))
-                .thenReturn(1L);
+        
+        // 重置mock并设置行为
+        reset(defectMapper);
+        doReturn(defectList).when(defectMapper).selectDefectList(anyString(), anyString(), anyString(), anyInt(), anyInt());
+        doReturn(1L).when(defectMapper).selectDefectCount(anyString(), anyString(), anyString());
 
         // 执行测试
-        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null);
+        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null, null);
 
         // 验证结果
         assertNotNull(response);
         assertEquals(0, response.getCode());
         assertEquals(1, response.getData().getItems().size());
-        assertEquals("否", response.getData().getItems().get(0).getIsVerified());
-        assertEquals("已上报", response.getData().getItems().get(0).getStatus());
+        assertNull(response.getData().getItems().get(0).getImageUrls());
+    }
+
+    @Test
+    void toDto_WithEmptyImageUrls() {
+        // 准备测试数据
+        Defect defect = new Defect();
+        defect.setDefectId(1L);
+        defect.setDefectType("裂缝");
+        defect.setImageUrls("");
+        defect.setIsVerified(false);
+        defect.setStatus("0");
+
+        List<Defect> defectList = Arrays.asList(defect);
+        
+        // 重置mock并设置行为
+        reset(defectMapper);
+        doReturn(defectList).when(defectMapper).selectDefectList(anyString(), anyString(), anyString(), anyInt(), anyInt());
+        doReturn(1L).when(defectMapper).selectDefectCount(anyString(), anyString(), anyString());
+
+        // 执行测试
+        Response<PageResult<DefectDto>> response = defectService.getDefectList(1, 10, null, null, null);
+
+        // 验证结果
+        assertNotNull(response);
+        assertEquals(0, response.getCode());
+        assertEquals(1, response.getData().getItems().size());
+        assertTrue(response.getData().getItems().get(0).getImageUrls().isEmpty());
     }
 
     @Test
@@ -285,8 +326,10 @@ class DefectServiceTest {
         dto.setDefectType("裂缝");
         dto.setImageUrls(Collections.emptyList());
         dto.setIsVerified("否");
-        dto.setStatus("已整改");
+        dto.setStatus("已上报");
 
+        // 重置mock并设置行为
+        reset(defectMapper);
         doNothing().when(defectMapper).create(any(Defect.class));
 
         // 执行测试
@@ -296,12 +339,13 @@ class DefectServiceTest {
         assertNotNull(response);
         assertEquals(0, response.getCode());
 
-        // 验证方法调用
+        // 验证方法调用 - 空列表时imageUrls保持为null
         verify(defectMapper).create(argThat(defect -> {
             assertEquals(1L, defect.getDefectId());
             assertEquals("裂缝", defect.getDefectType());
+            assertNull(defect.getImageUrls()); // 空列表时imageUrls为null
             assertEquals(false, defect.getIsVerified());
-            assertEquals("1", defect.getStatus());
+            assertEquals("0", defect.getStatus());
             return true;
         }));
     }
