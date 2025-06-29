@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * 任务管理模块
  */
 @RestController
-@RequestMapping("/api/task")
+@RequestMapping("/api/inspection/task")
 public class TaskController {
 
     @Autowired
@@ -35,7 +35,10 @@ public class TaskController {
     public Response<PageResult<TaskDto>> getTaskList(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String taskId,
             @RequestParam(required = false) String taskName,
+            @RequestParam(required = false) Long creatorId,
+            @RequestParam(required = false) Long executorId,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String startTime,
             @RequestParam(required = false) String endTime
@@ -43,7 +46,7 @@ public class TaskController {
         // 设置默认值
         page = page == null ? 1 : page;
         pageSize = pageSize == null ? 20 : pageSize;
-        return taskService.getTaskList(page, pageSize, taskName, status, startTime, endTime);
+        return taskService.getTaskList(page, pageSize, taskId, taskName, creatorId, executorId, status, startTime, endTime);
     }
 
     /**
@@ -71,9 +74,11 @@ public class TaskController {
      * @param taskDto 任务信息
      * @return 更新结果
      */
-    @PutMapping("")
-    public Response<Void> update(@RequestBody TaskDto taskDto) {
-        return taskService.updateTask(taskDto);
+    @PutMapping("/{taskId}")
+    public Response<Void> update(
+            @PathVariable String taskId,
+            @RequestBody TaskDto taskDto) {
+        return taskService.updateTask(taskId, taskDto);
     }
 
     /**

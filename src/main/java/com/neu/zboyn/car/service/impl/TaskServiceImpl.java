@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,8 +20,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Override
-    public Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskName, String status, String startTime, String endTime) {
-        List<Task> tasks = taskMapper.selectTaskList(taskName, status, startTime, endTime);
+    public Response<PageResult<TaskDto>> getTaskList(Integer page, Integer pageSize, String taskId, String taskName, Long creatorId, Long executorId, String status, String startTime, String endTime) {
+        List<Task> tasks = taskMapper.selectTaskList(taskId, taskName, creatorId, executorId, status, startTime, endTime);
         List<TaskDto> dtoList = new ArrayList<>();
         for (Task task : tasks) {
             TaskDto dto = new TaskDto();
@@ -48,14 +49,17 @@ public class TaskServiceImpl implements TaskService {
     public Response<Void> createTask(TaskDto taskDto) {
         Task task = new Task();
         BeanUtils.copyProperties(taskDto, task);
+        task.setCreateTime(new Date());
+        task.setUploadTime(new Date());
         int res = taskMapper.insertTask(task);
         return res > 0 ? Response.success(null) : Response.error(500, "新增失败", "insert error");
     }
 
     @Override
-    public Response<Void> updateTask(TaskDto taskDto) {
+    public Response<Void> updateTask(String taskId, TaskDto taskDto) {
         Task task = new Task();
         BeanUtils.copyProperties(taskDto, task);
+        task.setTaskId(taskId);
         int res = taskMapper.updateTask(task);
         return res > 0 ? Response.success(null) : Response.error(500, "更新失败", "update error");
     }

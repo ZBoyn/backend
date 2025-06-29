@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neu.zboyn.car.mapper.DefectMapper">
+
+    <resultMap id="DefectResultMap" type="com.neu.zboyn.car.model.Defect">
+        <id property="defectId" column="defect_id"/>
+        <result property="taskId" column="task_id"/>
+        <result property="defectType" column="defect_type"/>
+        <result property="distanceFromOrigin" column="distance_from_origin"/>
+        <result property="imageUrls" column="image_urls"/>
+        <result property="isVerified" column="is_verified"/>
+        <result property="severity" column="severity"/>
+        <result property="defectLength" column="defect_length"/>
+        <result property="defectArea" column="defect_area"/>
+        <result property="defectQuantity" column="defect_quantity"/>
+        <result property="recommendedAction" column="recommended_action"/>
+        <result property="reportedTime" column="reported_time"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <!-- 分页查询 -->
+    <select id="selectDefectList" resultMap="DefectResultMap">
+        SELECT * FROM defect
+        <where>
+            <if test="defectType != null and defectType != ''">
+                AND defect_type = #{defectType}
+            </if>
+            <if test="severity != null and severity != ''">
+                AND severity = #{severity}
+            </if>
+        </where>
+        ORDER BY defect_id ASC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 计数 -->
+    <select id="selectDefectCount" resultType="long">
+        SELECT COUNT(*) FROM defect
+        <where>
+            <if test="defectType != null and defectType != ''">
+                AND defect_type = #{defectType}
+            </if>
+            <if test="severity != null and severity != ''">
+                AND severity = #{severity}
+            </if>
+        </where>
+    </select>
+
+    <!-- 新增 -->
+    <insert id="create">
+        INSERT INTO defect (
+        task_id, defect_type, distance_from_origin, image_urls, is_verified, severity,
+        defect_length, defect_area, defect_quantity, recommended_action, reported_time, status
+        ) VALUES (
+        #{taskId}, #{defectType}, #{distanceFromOrigin}, #{imageUrls}, #{isVerified}, #{severity},
+        #{defectLength}, #{defectArea}, #{defectQuantity}, #{recommendedAction}, #{reportedTime}, #{status}
+        )
+    </insert>
+
+    <!-- 修改 -->
+    <update id="update">
+        UPDATE defect
+        <set>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="defectType != null">defect_type = #{defectType},</if>
+            <if test="distanceFromOrigin != null">distance_from_origin = #{distanceFromOrigin},</if>
+            <if test="imageUrls != null">image_urls = #{imageUrls},</if>
+            <if test="isVerified != null">is_verified = #{isVerified},</if>
+            <if test="severity != null">severity = #{severity},</if>
+            <if test="defectLength != null">defect_length = #{defectLength},</if>
+            <if test="defectArea != null">defect_area = #{defectArea},</if>
+            <if test="defectQuantity != null">defect_quantity = #{defectQuantity},</if>
+            <if test="recommendedAction != null">recommended_action = #{recommendedAction},</if>
+            <if test="reportedTime != null">reported_time = #{reportedTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE defect_id = #{defectId}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM defect WHERE defect_id = #{defectId}
+    </delete>
+
+    <!-- 缺陷确认 -->
+    <update id="updateIsVerified">
+        UPDATE defect SET is_verified = #{isVerified} WHERE defect_id = #{defectId}
+    </update>
+
+    <!-- 已整改标记 -->
+    <update id="updateStatus">
+        UPDATE defect SET status = #{status} WHERE defect_id = #{defectId}
+    </update>
+
+</mapper>

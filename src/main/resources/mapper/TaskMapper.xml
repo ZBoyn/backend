@@ -32,8 +32,17 @@
             create_time
         FROM task
         <where>
+            <if test="taskId != null and taskId != ''">
+                AND task_id = #{taskId}
+            </if>
             <if test="taskName != null and taskName != ''">
                 AND task_name LIKE CONCAT('%', #{taskName}, '%')
+            </if>
+            <if test="creatorId != null and creatorId != ''">
+                AND creator_id = #{creatorId}
+            </if>
+            <if test="executorId != null and executorId != ''">
+                AND executor_id = #{executorId}
             </if>
             <if test="status != null and status != ''">
                 AND status = #{status}
@@ -67,12 +76,12 @@
 
     <insert id="insertTask" parameterType="com.neu.zboyn.car.model.Task">
         INSERT INTO task (
-            task_name, creator_id, executor_id, start_location, 
+            task_id, task_name, creator_id, executor_id, start_location,
             distance, deadline_time, completion_time, upload_time, 
             status, create_time
         )
         VALUES (
-            #{taskName}, #{creatorId}, #{executorId}, #{startLocation},
+            #{taskId}, #{taskName}, #{creatorId}, #{executorId}, #{startLocation},
             #{distance}, #{deadlineTime}, #{completionTime}, #{uploadTime},
             #{status}, #{createTime}
         )

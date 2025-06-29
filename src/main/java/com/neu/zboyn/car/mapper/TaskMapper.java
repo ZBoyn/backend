@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface TaskMapper {
-    List<Task> selectTaskList(@Param("taskName") String taskName, @Param("status") String status, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Task> selectTaskList(@Param("taskId") String taskId, @Param("taskName") String taskName, @Param("creatorId") Long creatorId, @Param("executorId") Long executorId, @Param("status") String status, @Param("startTime") String startTime, @Param("endTime") String endTime);
     Task selectTaskById(@Param("taskId") String taskId);
     int insertTask(Task task);
     int updateTask(Task task);
