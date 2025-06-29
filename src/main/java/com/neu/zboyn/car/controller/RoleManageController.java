@@ -5,7 +5,8 @@ import com.neu.zboyn.car.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.List;
+import java.util.Map;
 
 /**
  * 角色管理模块
@@ -91,7 +92,33 @@ public class RoleManageController {
             return roleService.changeRoleUser(userId, roleId);
         }
 
+    /**
+     * 获取角色下的用户列表
+     */
+    @GetMapping("/{roleId}/users")
+    public Response<List<UserDto>> getRoleUsers(@PathVariable Long roleId) {
+        return roleService.getRoleUsers(roleId);
+    }
 
+    /**
+     * 分配用户到角色
+     */
+    @PostMapping("/{roleId}/users")
+    public Response<Void> assignUsersToRole(
+            @PathVariable Long roleId,
+            @RequestBody Map<String, List<Long>> body) {
+        List<Long> userIds = body.get("userIds");
+        return roleService.assignUsersToRole(roleId, userIds);
+    }
 
-
+    /**
+     * 从角色中移除用户
+     */
+    @DeleteMapping("/{roleId}/users")
+    public Response<Void> removeUsersFromRole(
+            @PathVariable Long roleId,
+            @RequestBody Map<String, List<Long>> body) {
+        List<Long> userIds = body.get("userIds");
+        return roleService.removeUsersFromRole(roleId, userIds);
+    }
 }

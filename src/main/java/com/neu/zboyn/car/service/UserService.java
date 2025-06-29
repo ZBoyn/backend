@@ -3,8 +3,11 @@ package com.neu.zboyn.car.service;
 
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.dto.ShowRoleDto;
 import com.neu.zboyn.car.dto.UserDto;
 import com.neu.zboyn.car.model.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -34,4 +37,6 @@ public interface UserService {
 
 
     Response<User> getUserByCreatorId(String creatorId);
+
+    Response<List<ShowRoleDto>> getUserRolesByUserId(String userId);
 }

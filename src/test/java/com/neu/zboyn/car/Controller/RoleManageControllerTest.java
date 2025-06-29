@@ -1,7 +1,5 @@
 package com.neu.zboyn.car.Controller;
 
-
-
 import com.neu.zboyn.car.controller.RoleManageController;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
@@ -10,16 +8,14 @@ import com.neu.zboyn.car.service.RoleService;
 import com.neu.zboyn.car.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,21 +26,35 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(RoleManageController.class)
+@ExtendWith(MockitoExtension.class)
 class RoleManageControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private RoleService roleService;
 
-    @BeforeEach
-    void setUp() {
-        // 不需要手动初始化 mockMvc，Spring 会自动注入
-    }
-    @MockBean  // 添加这一行来模拟UserService
+    @Mock
     private UserService userService;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        // 创建RoleManageController实例
+        RoleManageController roleManageController = new RoleManageController();
+        
+        // 使用反射设置私有字段
+        Field roleServiceField = RoleManageController.class.getDeclaredField("roleService");
+        roleServiceField.setAccessible(true);
+        roleServiceField.set(roleManageController, roleService);
+        
+        Field userServiceField = RoleManageController.class.getDeclaredField("userService");
+        userServiceField.setAccessible(true);
+        userServiceField.set(roleManageController, userService);
+        
+        mockMvc = MockMvcBuilders.standaloneSetup(roleManageController)
+                .build();
+    }
+
     @Test
     void testGetRoleList() throws Exception {
         // 准备测试数据
@@ -72,6 +82,7 @@ class RoleManageControllerTest {
         // 验证服务方法被调用
         verify(roleService, times(1)).getRoleList(1, 10, null, null, null, null, null, null);
     }
+
     @Test
     void testGetRoleById() throws Exception {
         // 准备测试数据
@@ -124,7 +135,7 @@ class RoleManageControllerTest {
         Response<Void> expectedResponse = Response.success(null);
 
         // 模拟服务层方法调用
-        when(roleService.updateRole(roleDto)).thenReturn(expectedResponse);
+        when(roleService.updateRole("1", roleDto)).thenReturn(expectedResponse);
 
         // 执行请求
         mockMvc.perform(put("/api/system/role")
@@ -134,7 +145,7 @@ class RoleManageControllerTest {
                 .andExpect(jsonPath("$.code", is(0)));
 
         // 验证服务方法被调用
-        verify(roleService, times(1)).updateRole(roleDto);
+        verify(roleService, times(1)).updateRole("1", roleDto);
     }
 
     @Test
@@ -153,6 +164,7 @@ class RoleManageControllerTest {
         // 验证服务方法被调用
         verify(roleService, times(1)).deleteRole(1L);
     }
+
     @Test
     void testChangeUser() throws Exception {
         // 准备测试数据

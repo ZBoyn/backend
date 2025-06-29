@@ -140,7 +140,14 @@ public class UserManageController {
         return departmentService.getDepartmentinfo();
     }
 
-
-
+    /**
+     * 获取指定用户的当前角色列表
+     * @param userId 用户ID
+     * @return 角色列表
+     */
+    @GetMapping("/{userId}/roles")
+    public Response<List<ShowRoleDto>> getUserRoles(@PathVariable String userId) {
+        return userService.getUserRolesByUserId(userId);
+    }
 
 }

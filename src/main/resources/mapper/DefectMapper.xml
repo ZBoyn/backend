@@ -10,6 +10,7 @@
         <result property="taskId" column="task_id"/>
         <result property="defectType" column="defect_type"/>
         <result property="distanceFromOrigin" column="distance_from_origin"/>
+        <result property="processedImageUrl" column="processed_image_url"/>
         <result property="imageUrls" column="image_urls"/>
         <result property="isVerified" column="is_verified"/>
         <result property="severity" column="severity"/>
@@ -28,11 +29,14 @@
             <if test="defectType != null and defectType != ''">
                 AND defect_type = #{defectType}
             </if>
-            <if test="severity != null and severity != ''">
-                AND severity = #{severity}
+            <if test="taskId != null and taskId != ''">
+                AND task_id = #{taskId}
+            </if>
+            <if test="isVerified != null and isVerified != ''">
+                AND is_verified = #{isVerified}
             </if>
         </where>
-        ORDER BY defect_id ASC
+        ORDER BY defect_id DESC
         LIMIT #{offset}, #{pageSize}
     </select>
 
@@ -40,11 +44,14 @@
     <select id="selectDefectCount" resultType="long">
         SELECT COUNT(*) FROM defect
         <where>
+            <if test="taskId != null and taskId != ''">
+                AND task_id = #{taskId}
+            </if>
             <if test="defectType != null and defectType != ''">
                 AND defect_type = #{defectType}
             </if>
-            <if test="severity != null and severity != ''">
-                AND severity = #{severity}
+            <if test="isVerified != null and isVerified != ''">
+                AND is_verified = #{isVerified}
             </if>
         </where>
     </select>
@@ -52,11 +59,13 @@
     <!-- 新增 -->
     <insert id="create">
         INSERT INTO defect (
-        task_id, defect_type, distance_from_origin, image_urls, is_verified, severity,
-        defect_length, defect_area, defect_quantity, recommended_action, reported_time, status
+        task_id, defect_type, distance_from_origin, processed_image_url, 
+        image_urls, is_verified, severity, defect_length, defect_area, defect_quantity, 
+        recommended_action, reported_time, status
         ) VALUES (
-        #{taskId}, #{defectType}, #{distanceFromOrigin}, #{imageUrls}, #{isVerified}, #{severity},
-        #{defectLength}, #{defectArea}, #{defectQuantity}, #{recommendedAction}, #{reportedTime}, #{status}
+        #{taskId}, #{defectType}, #{distanceFromOrigin}, #{processedImageUrl},
+        #{imageUrls}, #{isVerified}, #{severity}, #{defectLength}, #{defectArea}, #{defectQuantity}, 
+        #{recommendedAction}, #{reportedTime}, #{status}
         )
     </insert>
 
@@ -67,8 +76,9 @@
             <if test="taskId != null">task_id = #{taskId},</if>
             <if test="defectType != null">defect_type = #{defectType},</if>
             <if test="distanceFromOrigin != null">distance_from_origin = #{distanceFromOrigin},</if>
+            <if test="processedImageUrl != null">processed_image_url = #{processedImageUrl},</if>
             <if test="imageUrls != null">image_urls = #{imageUrls},</if>
-            <if test="isVerified != null">is_verified = #{isVerified},</if>
+            <if test="is_verified != null">is_verified = #{is_verified},</if>
             <if test="severity != null">severity = #{severity},</if>
             <if test="defectLength != null">defect_length = #{defectLength},</if>
             <if test="defectArea != null">defect_area = #{defectArea},</if>
@@ -94,5 +104,16 @@
     <update id="updateStatus">
         UPDATE defect SET status = #{status} WHERE defect_id = #{defectId}
     </update>
+
+    <!-- 根据任务ID获取处理后的图片URL -->
+    <select id="getProcessedImageUrlByTaskId" resultType="string">
+        SELECT processed_image_url 
+        FROM defect 
+        WHERE task_id = #{taskId} 
+        AND processed_image_url IS NOT NULL 
+        AND processed_image_url != '' 
+        ORDER BY defect_id DESC 
+        LIMIT 1
+    </select>
 
 </mapper>

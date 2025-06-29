@@ -104,4 +104,12 @@
     <delete id="deleteTask">
         DELETE FROM task WHERE task_id = #{taskId}
     </delete>
+
+    <select id="selectTaskIdByTaskName" resultType="string">
+        SELECT task_id FROM task WHERE task_name = #{taskName} LIMIT 1
+    </select>
+
+    <select id="selectTaskNameByTaskId" resultType="string">
+        SELECT task_name FROM task WHERE task_id = #{taskId} LIMIT 1
+    </select>
 </mapper>

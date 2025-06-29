@@ -4,9 +4,11 @@ import com.neu.zboyn.car.dto.DefectDto;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.DefectMapper;
+import com.neu.zboyn.car.mapper.TaskMapper;
 import com.neu.zboyn.car.model.Defect;
 import com.neu.zboyn.car.service.DefectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,16 +21,34 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
     private DefectMapper defectMapper;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @Value("${file.server-url}")
+    private String serverUrl;
+
     private DefectDto toDto(Defect defect) {
         if (defect == null) return null;
         DefectDto dto = new DefectDto();
         dto.setDefectId(defect.getDefectId());
-        dto.setTaskId(defect.getTaskId());
+        // 将taskId转为任务名
+        String taskName = taskMapper != null ? taskMapper.selectTaskNameByTaskId(defect.getTaskId()) : defect.getTaskId();
+        dto.setTaskId(taskName);
         dto.setDefectType(defect.getDefectType());
         dto.setDistanceFromOrigin(defect.getDistanceFromOrigin());
-        // 图片URL分割
+        // 图片URL分割并拼接完整路径
         if (defect.getImageUrls() != null && !defect.getImageUrls().isEmpty()) {
-            dto.setImageUrls(Arrays.asList(defect.getImageUrls().split(",")));
+            List<String> relativeUrls = Arrays.asList(defect.getImageUrls().split(","));
+            List<String> fullUrls = new ArrayList<>();
+            for (String rel : relativeUrls) {
+                // 避免重复拼接
+                if (rel.startsWith("http")) {
+                    fullUrls.add(rel);
+                } else {
+                    fullUrls.add(serverUrl + "/uploads/" + rel.replaceFirst("^/+", ""));
+                }
+            }
+            dto.setImageUrls(fullUrls);
         }
         dto.setIsVerified(defect.getIsVerified() != null && defect.getIsVerified() ? "是" : "否");
         dto.setSeverity(defect.getSeverity());
@@ -64,10 +84,22 @@ public class DefectServiceImpl implements DefectService {
     }
 
     @Override
-    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String defectType, String severity) {
+    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String taskId, String defectType, String isVerified) {
+        // 添加调试日志
+        System.out.println("=== DefectService Debug Info ===");
+        System.out.println("page: " + page);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("taskId: " + taskId);
+        System.out.println("defectType: " + defectType);
+        System.out.println("isVerified: " + isVerified);
+        
         int offset = (page - 1) * pageSize;
-        List<Defect> list = defectMapper.selectDefectList(defectType, severity, offset, pageSize);
-        long total = defectMapper.selectDefectCount(defectType, severity);
+        List<Defect> list = defectMapper.selectDefectList(taskId, defectType, isVerified, offset, pageSize);
+        long total = defectMapper.selectDefectCount(taskId, defectType, isVerified);
+        
+        System.out.println("查询结果数量: " + list.size());
+        System.out.println("总记录数: " + total);
+        
         List<DefectDto> dtoList = new ArrayList<>();
         for (Defect d : list) {
             dtoList.add(toDto(d));
@@ -106,4 +138,4 @@ public class DefectServiceImpl implements DefectService {
         defectMapper.updateStatus(defectId, "1");
         return Response.success(null);
     }
-} 
+}

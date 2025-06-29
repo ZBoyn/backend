@@ -26,4 +26,6 @@ public class RegisterRequest {
     @JsonSetter
     private Date createTime;
 
+    public RegisterRequest(String username, String nickname, String password, int deptId, String phoneNumber, Date createTime) {
+    }
 }

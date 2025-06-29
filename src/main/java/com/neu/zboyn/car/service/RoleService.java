@@ -4,6 +4,7 @@ import com.neu.zboyn.car.dto.RoleDto;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.ShowRoleDto;
+import com.neu.zboyn.car.dto.UserDto;
 
 import java.util.List;
 
@@ -16,4 +17,8 @@ public interface RoleService {
     Response<List<ShowRoleDto>> getRoleName();
 
     Response<Void> changeRoleUser(String roleId, String userId);
+
+    Response<List<UserDto>> getRoleUsers(Long roleId);
+    Response<Void> assignUsersToRole(Long roleId, List<Long> userIds);
+    Response<Void> removeUsersFromRole(Long roleId, List<Long> userIds);
 }

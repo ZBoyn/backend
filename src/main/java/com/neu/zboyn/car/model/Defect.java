@@ -14,6 +14,7 @@ public class Defect {
     private String taskId;                // 所属任务编号
     private String defectType;            // 缺陷类型
     private String distanceFromOrigin;    // 缺陷距离原点位置
+    private String processedImageUrl;     // 处理后图片URL（包含缺陷标注）
     private String imageUrls;             // 缺陷图片URL列表（建议用逗号分隔）
     private Boolean isVerified;           // 是否属实
     private String severity;              // 严重程度
