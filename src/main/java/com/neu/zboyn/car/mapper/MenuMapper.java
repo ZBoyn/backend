@@ -18,4 +18,18 @@ public interface MenuMapper {
     int updateMenu(Menu menu);
     int deleteMenu(Long id);
     Menu getMenuById(Long id);
+    
+    /**
+     * 根据路径统计菜单数量
+     * @param path 菜单路径
+     * @return 数量
+     */
+    int countByPath(@Param("path") String path);
+    
+    /**
+     * 根据名称统计菜单数量
+     * @param name 菜单名称
+     * @return 数量
+     */
+    int countByName(@Param("name") String name);
 } 

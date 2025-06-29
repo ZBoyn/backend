@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/system/menu")
 public class MenuManageController {
+
     @Autowired
     private MenuService menuService;
 
@@ -51,5 +52,15 @@ public class MenuManageController {
     @GetMapping("/{id}")
     public Response<MenuDto> getMenuById(@PathVariable Long id) {
         return menuService.getMenuById(id);
+    }
+
+    @GetMapping("/path-exists")
+    public Response<Boolean> checkPathExists(@RequestParam String path) {
+        return menuService.checkPathExists(path);
+    }
+
+    @GetMapping("/name-exists")
+    public Response<Boolean> checkNameExists(@RequestParam String name) {
+        return menuService.checkNameExists(name);
     }
 }

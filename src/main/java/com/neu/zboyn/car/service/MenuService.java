@@ -19,4 +19,18 @@ public interface MenuService {
     Response<Void> updateMenu(Menu menu);
     Response<Void> deleteMenu(Long id);
     Response<MenuDto> getMenuById(Long id);
+    
+    /**
+     * 检查菜单路径是否已存在
+     * @param path 菜单路径
+     * @return 是否存在
+     */
+    Response<Boolean> checkPathExists(String path);
+    
+    /**
+     * 检查菜单名称是否已存在
+     * @param name 菜单名称
+     * @return 是否存在
+     */
+    Response<Boolean> checkNameExists(String name);
 } 

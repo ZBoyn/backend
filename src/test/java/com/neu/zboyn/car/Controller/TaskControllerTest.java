@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -90,7 +89,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.items", hasSize(2)))
                 .andExpect(jsonPath("$.data.items[0].taskId", is("1")))
-                .andExpect(jsonPath("$.data.items[1].taskName", is(1)));
+                .andExpect(jsonPath("$.data.items[1].taskName", is("任务2")));
     }
 
     @Test
@@ -106,7 +105,7 @@ class TaskControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.taskId", is("1")))
-                .andExpect(jsonPath("$.data.taskName", is(1)));
+                .andExpect(jsonPath("$.data.taskName", is("测试任务")));
     }
 
     @Test

@@ -140,4 +140,24 @@ public class MenuServiceImpl implements MenuService {
             return Response.error(500, "获取菜单失败", e.getMessage());
         }
     }
+
+    @Override
+    public Response<Boolean> checkPathExists(String path) {
+        try {
+            int count = menuMapper.countByPath(path);
+            return Response.success(count > 0);
+        } catch (Exception e) {
+            return Response.error(500, "检查路径失败", e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<Boolean> checkNameExists(String name) {
+        try {
+            int count = menuMapper.countByName(name);
+            return Response.success(count > 0);
+        } catch (Exception e) {
+            return Response.error(500, "检查名称失败", e.getMessage());
+        }
+    }
 } 

@@ -32,7 +32,13 @@ public class DefectServiceImpl implements DefectService {
         DefectDto dto = new DefectDto();
         dto.setDefectId(defect.getDefectId());
         // 将taskId转为任务名
-        String taskName = taskMapper != null ? taskMapper.selectTaskNameByTaskId(defect.getTaskId()) : defect.getTaskId();
+        String taskName;
+        try {
+            taskName = taskMapper != null ? taskMapper.selectTaskNameByTaskId(defect.getTaskId()) : defect.getTaskId();
+        } catch (Exception e) {
+            // 如果查询任务名失败，使用原始taskId
+            taskName = defect.getTaskId();
+        }
         dto.setTaskId(taskName);
         dto.setDefectType(defect.getDefectType());
         dto.setDistanceFromOrigin(defect.getDistanceFromOrigin());

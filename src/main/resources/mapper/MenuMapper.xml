@@ -55,4 +55,12 @@
         SELECT * FROM sys_menu WHERE menu_id = #{id}
     </select>
 
+    <select id="countByPath" resultType="int">
+        SELECT COUNT(*) FROM sys_menu WHERE path = #{path}
+    </select>
+
+    <select id="countByName" resultType="int">
+        SELECT COUNT(*) FROM sys_menu WHERE name = #{name}
+    </select>
+
 </mapper> 
