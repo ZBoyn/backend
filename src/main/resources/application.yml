@@ -19,10 +19,10 @@ mybatis:
 
 file:
   upload-dir: "C:/Users/27978/Desktop/SmartCar/upload"
-  server-url: http://localhost:8082
+  server-url: http://localhost:8080
 
 server:
-  port: 8082
+  port: 8080
 
 ai:
   detection-service:

@@ -4,6 +4,7 @@ import com.neu.zboyn.car.dto.DefectDto;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.DefectMapper;
+import com.neu.zboyn.car.mapper.TaskMapper;
 import com.neu.zboyn.car.model.Defect;
 import com.neu.zboyn.car.service.DefectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
     private DefectMapper defectMapper;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     @Value("${file.server-url}")
     private String serverUrl;
 
@@ -27,7 +31,9 @@ public class DefectServiceImpl implements DefectService {
         if (defect == null) return null;
         DefectDto dto = new DefectDto();
         dto.setDefectId(defect.getDefectId());
-        dto.setTaskId(defect.getTaskId());
+        // 将taskId转为任务名
+        String taskName = taskMapper != null ? taskMapper.selectTaskNameByTaskId(defect.getTaskId()) : defect.getTaskId();
+        dto.setTaskId(taskName);
         dto.setDefectType(defect.getDefectType());
         dto.setDistanceFromOrigin(defect.getDistanceFromOrigin());
         // 图片URL分割并拼接完整路径
@@ -78,10 +84,22 @@ public class DefectServiceImpl implements DefectService {
     }
 
     @Override
-    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String taskId, String defectType, String is_verified) {
+    public Response<PageResult<DefectDto>> getDefectList(int page, int pageSize, String taskId, String defectType, String isVerified) {
+        // 添加调试日志
+        System.out.println("=== DefectService Debug Info ===");
+        System.out.println("page: " + page);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("taskId: " + taskId);
+        System.out.println("defectType: " + defectType);
+        System.out.println("isVerified: " + isVerified);
+        
         int offset = (page - 1) * pageSize;
-        List<Defect> list = defectMapper.selectDefectList(taskId, defectType, is_verified, offset, pageSize);
-        long total = defectMapper.selectDefectCount(taskId, defectType, is_verified);
+        List<Defect> list = defectMapper.selectDefectList(taskId, defectType, isVerified, offset, pageSize);
+        long total = defectMapper.selectDefectCount(taskId, defectType, isVerified);
+        
+        System.out.println("查询结果数量: " + list.size());
+        System.out.println("总记录数: " + total);
+        
         List<DefectDto> dtoList = new ArrayList<>();
         for (Defect d : list) {
             dtoList.add(toDto(d));
@@ -120,4 +138,4 @@ public class DefectServiceImpl implements DefectService {
         defectMapper.updateStatus(defectId, "1");
         return Response.success(null);
     }
-} 
+}

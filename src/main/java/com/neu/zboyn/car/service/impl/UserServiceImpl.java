@@ -4,7 +4,9 @@ package com.neu.zboyn.car.service.impl;
 import com.neu.zboyn.car.dto.PageResult;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.UserDto;
+import com.neu.zboyn.car.dto.ShowRoleDto;
 import com.neu.zboyn.car.mapper.UserManageMapper;
+import com.neu.zboyn.car.mapper.RoleMapper;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.UserService;
 import com.neu.zboyn.car.util.BCryptUtil;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SysConfigService sysConfigService;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     public Response<PageResult<User>> getUserList(int page, int pageSize, String userId, String username, String nickname, Long deptId, String phoneNumber, Integer status, String startTime, String endTime) {
@@ -81,6 +86,12 @@ public class UserServiceImpl implements UserService {
             return Response.error(404, "用户不存在", "not found");
         }
         return Response.success(user);
+    }
+
+    @Override
+    public Response<List<ShowRoleDto>> getUserRolesByUserId(String userId) {
+        List<ShowRoleDto> roles = roleMapper.getRolesByUserId(userId);
+        return new Response<>(0, roles, "获取成功", "success");
     }
 
 }

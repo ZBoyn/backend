@@ -16,4 +16,6 @@ public interface RoleMapper {
     List<ShowRoleDto> getRole();
 
     void changeRoleUser(String roleId, String userId);
+
+    List<ShowRoleDto> getRolesByUserId(@Param("userId") String userId);
 }

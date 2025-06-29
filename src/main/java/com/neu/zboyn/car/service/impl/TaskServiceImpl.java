@@ -69,4 +69,15 @@ public class TaskServiceImpl implements TaskService {
         int res = taskMapper.deleteTask(taskId);
         return res > 0 ? Response.success(null) : Response.error(500, "删除失败", "delete error");
     }
+
+    @Override
+    public Response<PageResult<Task>> getUserTaskList(String userId, Integer page, Integer pageSize) {
+        List<Task> tasks = taskMapper.getUserTaskList(userId);
+        PageResult<Task> result = new PageResult<>();
+        result.setItems(tasks);
+        result.setTotal(tasks.size());
+        result.setPage(page == null ? 1 : page);
+        result.setPageSize(pageSize == null ? 20 : pageSize);
+        return new Response<>(0, result, "success", "success");
+    }
 }
