@@ -51,6 +51,13 @@
         SELECT role_id, role_name FROM role;
     </select>
 
+    <select id="getRolesByUserId" resultType="com.neu.zboyn.car.dto.ShowRoleDto">
+        SELECT r.role_id AS roleId, r.role_name AS roleName
+        FROM role r
+                 INNER JOIN user_role ur ON r.role_id = ur.role_id
+        WHERE ur.user_id = #{userId}
+    </select>
+
     <insert id="insertRole" parameterType="com.neu.zboyn.car.model.Role">
         INSERT INTO role (role_name, role_key, role_sort, data_scope, status, create_time, update_time, remark)
         VALUES (#{roleName}, #{roleKey}, #{roleSort}, #{dataScope}, #{status}, #{createTime}, #{updateTime}, #{remark})

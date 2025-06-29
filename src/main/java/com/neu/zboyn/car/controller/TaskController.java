@@ -2,6 +2,7 @@ package com.neu.zboyn.car.controller;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.dto.TaskDto;
 import com.neu.zboyn.car.dto.PageResult;
+import com.neu.zboyn.car.model.Task;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.TaskService;
 import com.neu.zboyn.car.service.UserService;
@@ -47,6 +48,19 @@ public class TaskController {
         page = page == null ? 1 : page;
         pageSize = pageSize == null ? 20 : pageSize;
         return taskService.getTaskList(page, pageSize, taskId, taskName, creatorId, executorId, status, startTime, endTime);
+    }
+
+    //获取用户的分页列表
+    @GetMapping("/user/{userId}")
+    public Response<PageResult<Task>> getUserTaskList(
+            @PathVariable String userId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize
+    ) {
+        // 设置默认值
+        page = page == null ? 1 : page;
+        pageSize = pageSize == null ? 20 : pageSize;
+        return taskService.getUserTaskList(userId, page, pageSize);
     }
 
     /**

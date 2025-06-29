@@ -16,3 +16,14 @@ mybatis:
   configuration:
     # 驼峰和下划线命名自动转换
     map-underscore-to-camel-case: true
+
+file:
+  upload-dir: "C:/Users/27978/Desktop/SmartCar/upload"
+  server-url: http://localhost:8080
+
+server:
+  port: 8080
+
+ai:
+  detection-service:
+    url: "http://127.0.0.1:8001/detect"
