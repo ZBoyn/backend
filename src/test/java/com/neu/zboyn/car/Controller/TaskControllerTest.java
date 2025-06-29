@@ -8,14 +8,14 @@ import com.neu.zboyn.car.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -25,26 +25,32 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TaskController.class)
+@ExtendWith(MockitoExtension.class)
 class TaskControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @MockBean
+    @Mock
     private TaskService taskService;
 
-    @Autowired
     private ObjectMapper objectMapper;
 
     private TaskDto taskDto;
 
     @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    void setUp() throws Exception {
+        objectMapper = new ObjectMapper();
+        
+        // 创建TaskController实例
+        TaskController taskController = new TaskController();
+        
+        // 使用反射设置私有字段
+        Field taskServiceField = TaskController.class.getDeclaredField("taskService");
+        taskServiceField.setAccessible(true);
+        taskServiceField.set(taskController, taskService);
+        
+        mockMvc = MockMvcBuilders.standaloneSetup(taskController)
+                .build();
 
         taskDto = new TaskDto();
         taskDto.setTaskId("1");
@@ -71,11 +77,11 @@ class TaskControllerTest {
         );
 
         // 模拟服务层返回
-        when(taskService.getTaskList(1, 10, null, null, null, null))
+        when(taskService.getTaskList(1, 10, null, null, null, null, null, null, null))
                 .thenReturn(Response.success(pageResult));
 
         // 执行请求
-        mockMvc.perform(get("/api/task/list")
+        mockMvc.perform(get("/api/inspection/task/list")
                         .param("page", "1")
                         .param("pageSize", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -94,7 +100,7 @@ class TaskControllerTest {
                 .thenReturn(Response.success(taskDto));
 
         // 执行请求
-        mockMvc.perform(get("/api/task/1")
+        mockMvc.perform(get("/api/inspection/task/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -110,7 +116,7 @@ class TaskControllerTest {
                 .thenReturn(Response.success(null));
 
         // 执行请求
-        mockMvc.perform(post("/api/task")
+        mockMvc.perform(post("/api/inspection/task")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDto)))
                 .andExpect(status().isOk())
@@ -121,11 +127,11 @@ class TaskControllerTest {
     @Test
     void updateTask() throws Exception {
         // 模拟服务层返回
-        when(taskService.updateTask(taskDto))
+        when(taskService.updateTask("1", taskDto))
                 .thenReturn(Response.success(null));
 
         // 执行请求
-        mockMvc.perform(put("/api/task")
+        mockMvc.perform(put("/api/inspection/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDto)))
                 .andExpect(status().isOk())
@@ -140,7 +146,7 @@ class TaskControllerTest {
                 .thenReturn(Response.success(null));
 
         // 执行请求
-        mockMvc.perform(delete("/api/task/1")
+        mockMvc.perform(delete("/api/inspection/task/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -163,11 +169,11 @@ class TaskControllerTest {
         );
 
         // 模拟服务层返回
-        when(taskService.getTaskList(1, 10, "测试", "完成", null, null))
+        when(taskService.getTaskList(1, 10, null, "测试", null, null, "完成", null, null))
                 .thenReturn(Response.success(pageResult));
 
         // 执行请求
-        mockMvc.perform(get("/api/task/list")
+        mockMvc.perform(get("/api/inspection/task/list")
                         .param("page", "1")
                         .param("pageSize", "10")
                         .param("taskName", "测试")
