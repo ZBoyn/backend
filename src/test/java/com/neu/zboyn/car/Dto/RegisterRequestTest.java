@@ -17,8 +17,7 @@ class RegisterRequestTest {
         int deptId = 1;
         String phoneNumber = "1234567890";
         Date createTime = new Date();
-
-        RegisterRequest request = new RegisterRequest(username, nickname, password, deptId, phoneNumber, createTime);
+        RegisterRequest request = new RegisterRequest();
 
         assertThat(request.getUsername()).isEqualTo(username);
         assertThat(request.getNickname()).isEqualTo(nickname);

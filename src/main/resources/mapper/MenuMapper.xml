@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.zboyn.car.mapper.MenuMapper">
+    <resultMap id="MenuResultMap" type="com.neu.zboyn.car.model.Menu">
+        <id property="id" column="menu_id" />
+        <result property="pid" column="parent_id" />
+        <result property="name" column="name" />
+        <result property="path" column="path" />
+        <result property="component" column="component" />
+        <result property="type" column="menu_type" />
+        <result property="icon" column="icon" />
+        <result property="status" column="status" />
+        <result property="perms" column="perms" />
+        <result property="orderNum" column="order_num" />
+        <result property="titleKey" column="title_key" />
+        <result property="extraMeta" column="extra_meta" />
+        <result property="menuName" column="menu_name" />
+    </resultMap>
+
+    <select id="getAllMenus" resultMap="MenuResultMap">
+        SELECT * FROM sys_menu ORDER BY order_num ASC, menu_id ASC
+    </select>
+
+    <insert id="insertMenu" parameterType="com.neu.zboyn.car.model.Menu">
+        INSERT INTO sys_menu
+        (parent_id, name, menu_name, order_num, path, component, menu_type, perms, icon, title_key, extra_meta, status)
+        VALUES
+        (#{pid}, #{name}, #{menuName}, #{orderNum}, #{path}, #{component}, #{type}, #{perms}, #{icon}, #{titleKey}, #{extraMeta}, #{status})
+    </insert>
+
+    <update id="updateMenu" parameterType="com.neu.zboyn.car.model.Menu">
+        UPDATE sys_menu
+        <set>
+            <if test="pid != null">parent_id = #{pid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="component != null">component = #{component},</if>
+            <if test="type != null">menu_type = #{type},</if>
+            <if test="perms != null">perms = #{perms},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="titleKey != null">title_key = #{titleKey},</if>
+            <if test="extraMeta != null">extra_meta = #{extraMeta},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE menu_id = #{id}
+    </update>
+
+    <delete id="deleteMenu" parameterType="long">
+        DELETE FROM sys_menu WHERE menu_id = #{id}
+    </delete>
+
+    <select id="getMenuById" resultMap="MenuResultMap">
+        SELECT * FROM sys_menu WHERE menu_id = #{id}
+    </select>
+
+</mapper> 
