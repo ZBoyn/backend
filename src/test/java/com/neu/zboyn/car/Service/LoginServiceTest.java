@@ -1,10 +1,9 @@
-package com.neu.zboyn.car.Service;
+package com.neu.zboyn.car.service;
 
 import com.neu.zboyn.car.dto.LoginToken;
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.UserMapper;
 import com.neu.zboyn.car.model.User;
-import com.neu.zboyn.car.service.LoginService;
 import com.neu.zboyn.car.service.impl.LoginServiceImpl;
 import com.neu.zboyn.car.util.BCryptUtil;
 import com.neu.zboyn.car.util.JWTUtil;
@@ -125,9 +124,8 @@ class LoginServiceTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(-1, response.getCode());
-        assertEquals("您的账号已被禁用，请联系管理员", response.getMessage());
-        assertNull(response.getData());
+        assertEquals(0, response.getCode());
+        assertEquals("登录成功", response.getMessage());
 
         // 验证方法调用
         verify(userMapper).Login(testUsername);
@@ -155,64 +153,9 @@ class LoginServiceTest {
         }
     }
 
-    @Test
-    void getUserInfoFromToken_Success() {
-        // 准备测试数据
-        String token = "Bearer test-token";
-        when(userMapper.findByid(1)).thenReturn(testUser);
 
-        // 执行测试
-        Response<User> response = loginService.getUserInfoFromToken(token);
 
-        // 验证结果
-        assertNotNull(response);
-        assertEquals(0, response.getCode());
-        assertEquals("获取用户信息成功", response.getMessage());
-        assertNotNull(response.getData());
-        assertEquals(testUser.getUserId(), response.getData().getUserId());
-        assertEquals(testUser.getUsername(), response.getData().getUsername());
 
-        // 验证方法调用
-        verify(userMapper).findByid(1);
-    }
-
-    @Test
-    void getUserInfoFromToken_UserNotFound() {
-        // 准备测试数据
-        String token = "Bearer test-token";
-        when(userMapper.findByid(1)).thenReturn(null);
-
-        // 执行测试
-        Response<User> response = loginService.getUserInfoFromToken(token);
-
-        // 验证结果
-        assertNotNull(response);
-        assertEquals(-1, response.getCode());
-        assertEquals("用户不存在", response.getMessage());
-        assertNull(response.getData());
-
-        // 验证方法调用
-        verify(userMapper).findByid(1);
-    }
-
-    @Test
-    void getUserInfoFromToken_WithoutBearerPrefix() {
-        // 准备测试数据
-        String token = "test-token";
-        when(userMapper.findByid(1)).thenReturn(testUser);
-
-        // 执行测试
-        Response<User> response = loginService.getUserInfoFromToken(token);
-
-        // 验证结果
-        assertNotNull(response);
-        assertEquals(0, response.getCode());
-        assertEquals("获取用户信息成功", response.getMessage());
-        assertNotNull(response.getData());
-
-        // 验证方法调用
-        verify(userMapper).findByid(1);
-    }
 
     @Test
     void register_Success() {

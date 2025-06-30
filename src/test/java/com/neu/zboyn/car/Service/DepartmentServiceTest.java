@@ -1,4 +1,4 @@
-package com.neu.zboyn.car.Service;
+package com.neu.zboyn.car.service;
 
 import com.neu.zboyn.car.dto.Response;
 import com.neu.zboyn.car.mapper.DepartmentMapper;
