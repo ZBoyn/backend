@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.neu.zboyn.car.dto.LoginToken;
 import com.neu.zboyn.car.dto.Response;
+import com.neu.zboyn.car.mapper.RoleMapper;
 import com.neu.zboyn.car.mapper.UserMapper;
 import com.neu.zboyn.car.model.User;
 import com.neu.zboyn.car.service.LoginService;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class LoginServiceImpl implements LoginService {
     @Autowired
@@ -22,6 +25,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private BCryptUtil bCryptUtil;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     public Response<LoginToken> login(String username, String password) {
@@ -49,6 +55,11 @@ public class LoginServiceImpl implements LoginService {
             System.out.println("登录失败：生成Token时发生错误 - " + username);
             return new Response<>(-1, null, "服务器内部错误，请稍后再试", "服务器内部错误，请稍后再试");
         }
+
+        // 查询角色名并设置到user
+        List<String> roles = roleMapper.getRoleNamesByUserId(user.getUserId());
+        user.setRoles(roles);
+        user.setAccessToken(accessToken);
 
         LoginToken loginToken = new LoginToken(accessToken);
 
@@ -80,11 +91,14 @@ public class LoginServiceImpl implements LoginService {
                 return new Response<>(-1, null, "用户不存在", "用户不存在");
             }
 
+            List<String> roles = roleMapper.getRoleNamesByUserId(userId);
+            userByid.setRoles(roles);
+
             return new Response<>(0, userByid, "获取用户信息成功", "success");
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new Response<>(-1, null, "token无效或服务器异常", "error");
         }
     }
 

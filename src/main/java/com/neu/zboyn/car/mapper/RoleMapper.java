@@ -26,4 +26,7 @@ public interface RoleMapper {
     int insertUserRoles(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
     // 批量删除user_role
     int deleteUserRoles(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
+
+    // 根据用户ID查找角色英文标识（role_key）
+    List<String> getRoleNamesByUserId(@Param("userId") Integer userId);
 }

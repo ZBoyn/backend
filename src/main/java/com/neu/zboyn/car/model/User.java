@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +23,5 @@ public class User {
     private Date updateTime;
     private String remark;
     private String accessToken;
+    private List<String> roles; // 用户角色列表
 }

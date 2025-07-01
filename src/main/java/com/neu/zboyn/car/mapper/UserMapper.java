@@ -5,6 +5,8 @@ import com.neu.zboyn.car.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     User Login(@Param("username")String username);
@@ -17,4 +19,5 @@ public interface UserMapper {
     void insertUserRole(@Param("userId") Integer userId);
 
     String getLatestUserId();
+
 }
