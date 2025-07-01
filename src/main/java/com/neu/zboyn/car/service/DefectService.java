@@ -11,4 +11,5 @@ public interface DefectService {
     Response<Void> deleteDefect(Long defectId);
     Response<Void> verifyDefect(Long defectId, Boolean isVerified);
     Response<Void> markDefectRectified(Long defectId);
+    Response<Void> updateDefectStatus(Long defectId, String status);
 }

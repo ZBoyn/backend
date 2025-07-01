@@ -24,4 +24,5 @@ public class Menu {
     private String titleKey;   // title_key
     private String extraMeta;  // extra_meta（json）
     private Integer status;    // status
+    private Meta meta;         // meta（JSON对象）
 }

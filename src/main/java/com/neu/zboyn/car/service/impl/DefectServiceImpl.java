@@ -144,4 +144,19 @@ public class DefectServiceImpl implements DefectService {
         defectMapper.updateStatus(defectId, "1");
         return Response.success(null);
     }
+
+    @Override
+    public Response<Void> updateDefectStatus(Long defectId, String status) {
+        // 验证状态值是否有效
+        if (status == null || (!"0".equals(status) && !"1".equals(status))) {
+            return Response.error(400, "状态值无效，只能是 '0'(已上报) 或 '1'(已整改)", "参数错误");
+        }
+        
+        try {
+            defectMapper.updateStatus(defectId, status);
+            return Response.success(null, "状态更新成功", "ok");
+        } catch (Exception e) {
+            return Response.error(500, "状态更新失败: " + e.getMessage(), "系统错误");
+        }
+    }
 }

@@ -35,13 +35,15 @@ public class DefectController {
             @RequestParam int pageSize,
             @RequestParam(required = false) String taskId,
             @RequestParam(required = false) String defectType,
-            @RequestParam(required = false) String isVerified
+            @RequestParam(required = false) String isVerified,
+            @RequestParam(required = false) String status
     ) {
         // 添加调试日志
         System.out.println("=== Controller Debug Info ===");
         System.out.println("原始taskId: " + taskId);
         System.out.println("原始defectType: " + defectType);
         System.out.println("原始isVerified: " + isVerified);
+        System.out.println("原始status: " + status);
         
         String realTaskId = null;
         if (taskId != null && !taskId.isEmpty()) {
@@ -54,7 +56,6 @@ public class DefectController {
     // 新增
     @PostMapping("/create")
     public Response<Void> create(@RequestBody DefectDto defectDto) {
-
         return defectService.createDefect(defectDto);
     }
 
@@ -115,4 +116,13 @@ public class DefectController {
             return Response.error(500, "数据库检查失败: " + e.getMessage(), "系统错误");
         }
     }
+
+    @PostMapping("{defectId}/status")
+    public Response<Void> updateStatus(
+            @PathVariable Long defectId,
+            @RequestParam String status
+    ) {
+        return defectService.updateDefectStatus(defectId, status);
+    }
+
 }

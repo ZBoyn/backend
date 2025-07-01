@@ -23,9 +23,9 @@
 
     <insert id="insertMenu" parameterType="com.neu.zboyn.car.model.Menu">
         INSERT INTO sys_menu
-        (parent_id, name, menu_name, order_num, path, component, menu_type, perms, icon, title_key, extra_meta, status)
+        (parent_id, name, order_num, path, component, menu_type, perms, icon, title_key, extra_meta, status)
         VALUES
-        (#{pid}, #{name}, #{menuName}, #{orderNum}, #{path}, #{component}, #{type}, #{perms}, #{icon}, #{titleKey}, #{extraMeta}, #{status})
+        (#{pid}, #{name}, #{orderNum}, #{path}, #{component}, #{type}, #{perms}, #{icon}, #{titleKey}, #{extraMeta}, #{status})
     </insert>
 
     <update id="updateMenu" parameterType="com.neu.zboyn.car.model.Menu">
