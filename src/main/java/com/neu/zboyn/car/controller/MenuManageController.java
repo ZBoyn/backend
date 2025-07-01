@@ -6,6 +6,7 @@ import com.neu.zboyn.car.model.Menu;
 import com.neu.zboyn.car.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -50,16 +51,19 @@ public class MenuManageController {
     }
 
     @GetMapping("/{id}")
+    @Cacheable(value = "menuManage_id", key = "#id")
     public Response<MenuDto> getMenuById(@PathVariable Long id) {
         return menuService.getMenuById(id);
     }
 
     @GetMapping("/path-exists")
+    @Cacheable("menuManage_path_exists")
     public Response<Boolean> checkPathExists(@RequestParam String path) {
         return menuService.checkPathExists(path);
     }
 
     @GetMapping("/name-exists")
+    @Cacheable("menuManage_name_exists")
     public Response<Boolean> checkNameExists(@RequestParam String name) {
         return menuService.checkNameExists(name);
     }

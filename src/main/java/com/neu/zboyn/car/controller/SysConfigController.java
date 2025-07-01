@@ -6,6 +6,7 @@ import com.neu.zboyn.car.model.Sysconfig;
 import com.neu.zboyn.car.service.SysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 
 /**
@@ -21,6 +22,7 @@ public class SysConfigController {
      * 分页查询参数配置列表
      */
     @GetMapping("/list")
+    @Cacheable("sysConfig_list")
     public Response<PageResult<Sysconfig>> getConfigList(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer pageSize,

@@ -8,6 +8,7 @@ import com.neu.zboyn.car.service.TaskService;
 import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * 任务管理模块
@@ -52,6 +53,7 @@ public class TaskController {
 
     //获取用户的分页列表
     @GetMapping("/user/{userId}")
+    @Cacheable(value = "task_user", key = "#userId")
     public Response<PageResult<Task>> getUserTaskList(
             @PathVariable String userId,
             @RequestParam(required = false) Integer page,
@@ -69,6 +71,7 @@ public class TaskController {
      * @return 任务信息
      */
     @GetMapping("/{taskId}")
+    @Cacheable(value = "task_taskId", key = "#taskId")
     public Response<TaskDto> getTaskById(@PathVariable String taskId) {
         return taskService.getTaskById(taskId);
     }
@@ -111,6 +114,7 @@ public class TaskController {
      * @return 用户信息
      */
     @GetMapping("/task/{creatorId}")
+    @Cacheable(value = "task_creator", key = "#creatorId")
     public Response<User> getCreatorInfo(@PathVariable String creatorId) {
         return userService.getUserByCreatorId(creatorId);
     }

@@ -4,6 +4,7 @@ import com.neu.zboyn.car.dto.*;
 import com.neu.zboyn.car.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class RoleManageController {
      * @return 角色信息
      */
     @GetMapping("/{roleId}")
+    @Cacheable(value = "roleManage_roleId", key = "#roleId")
     public Response<RoleDto> getRoleById(@PathVariable Long roleId) {
         return roleService.getRoleById(roleId);
     }
@@ -96,6 +98,7 @@ public class RoleManageController {
      * 获取角色下的用户列表
      */
     @GetMapping("/{roleId}/users")
+    @Cacheable(value = "roleManage_roleId_users", key = "#roleId")
     public Response<List<UserDto>> getRoleUsers(@PathVariable Long roleId) {
         return roleService.getRoleUsers(roleId);
     }

@@ -9,6 +9,7 @@ import com.neu.zboyn.car.mapper.DefectMapper;
 import com.neu.zboyn.car.model.Defect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class DefectController {
 
     // 分页查询
     @GetMapping("/list")
+    @Cacheable("defect_list")
     public Response<PageResult<DefectDto>> list(
             @RequestParam int page,
             @RequestParam int pageSize,
@@ -89,6 +91,7 @@ public class DefectController {
      * 测试接口：检查数据库中的数据
      */
     @GetMapping("/test")
+    @Cacheable("defect_test")
     public Response<String> testDatabase() {
         try {
             // 直接查询所有缺陷数据

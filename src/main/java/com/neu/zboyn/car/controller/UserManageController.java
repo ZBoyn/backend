@@ -12,6 +12,7 @@ import com.neu.zboyn.car.service.RoleService;
 import com.neu.zboyn.car.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -131,11 +132,13 @@ public class UserManageController {
      * @return role_id, role_name
      */
     @GetMapping("/roles")
+    @Cacheable("userManage_roles")
     public Response<List<ShowRoleDto>> getAllRoles() {
         return roleService.getRoleName();
     }
 
     @GetMapping("/department")
+    @Cacheable("userManage_department")
     public Response<List<Department>> getAllDepartments(){
         return departmentService.getDepartmentinfo();
     }
@@ -146,6 +149,7 @@ public class UserManageController {
      * @return 角色列表
      */
     @GetMapping("/{userId}/roles")
+    @Cacheable(value = "userManage_user_roles", key = "#userId")
     public Response<List<ShowRoleDto>> getUserRoles(@PathVariable String userId) {
         return userService.getUserRolesByUserId(userId);
     }
