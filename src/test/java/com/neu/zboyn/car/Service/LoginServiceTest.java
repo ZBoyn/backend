@@ -39,7 +39,7 @@ class LoginServiceTest {
     void setUp() {
         testUsername = "admin";
         testPassword = "password";
-        
+
         testUser = new User();
         testUser.setUserId(1);
         testUser.setUsername(testUsername);
@@ -52,7 +52,7 @@ class LoginServiceTest {
         // 准备测试数据
         when(userMapper.Login(testUsername)).thenReturn(testUser);
         when(bCryptUtil.checkPassword(testPassword, testUser.getPassword())).thenReturn(true);
-        
+
         try (MockedStatic<JWTUtil> jwtUtilMock = mockStatic(JWTUtil.class)) {
             jwtUtilMock.when(() -> JWTUtil.generateToken(anyInt(), anyString(), anyString()))
                     .thenReturn("test-token");
@@ -137,7 +137,7 @@ class LoginServiceTest {
         // 准备测试数据
         when(userMapper.Login(testUsername)).thenReturn(testUser);
         when(bCryptUtil.checkPassword(testPassword, testUser.getPassword())).thenReturn(true);
-        
+
         try (MockedStatic<JWTUtil> jwtUtilMock = mockStatic(JWTUtil.class)) {
             jwtUtilMock.when(() -> JWTUtil.generateToken(anyInt(), anyString(), anyString()))
                     .thenReturn(null);
@@ -209,4 +209,4 @@ class LoginServiceTest {
         verify(userMapper).Login(username);
         verify(userMapper, never()).insertUserRole(anyInt());
     }
-} 
+}
